@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Combustible APP</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            900: '#14532d',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Mobile app styling to prevent pull-to-refresh and selection where not needed */
+        body {
+            overscroll-behavior-y: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800 font-sans h-screen flex flex-col overflow-hidden selection:bg-brand-500 selection:text-white">
+
+    <!-- Header -->
+    <header class="bg-brand-600 text-white p-4 shadow-md z-10 flex justify-between items-center shrink-0">
+        <div class="flex items-center gap-2">
+            <!-- Icono de Gasolinera -->
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 22v-8c0-1.1.9-2 2-2h4c1.1 0 2 .9 2 2v8"/><path d="M11 22H3"/><path d="M15 4h-4a2 2 0 0 0-2 2v4"/><path d="M15 10h-4"/><path d="M21 16v-2.5a3.5 3.5 0 0 0-7 0V22h7v-6z"/><path d="M21 10.5V6a2 2 0 0 0-2-2h-2"/><path d="M17 12h4"/></svg>
+            <h1 class="text-xl font-bold tracking-tight">Combustible APP</h1>
+        </div>
+        <select id="active-vehicle-select" class="bg-brand-900 border border-brand-500 text-sm rounded px-2 py-1 outline-none hidden max-w-[120px] truncate">
+            <!-- Options populated dynamically -->
+        </select>
+    </header>
+
+    <!-- Main Content Area -->
+    <main id="main-content" class="flex-1 overflow-y-auto pb-20 hide-scrollbar bg-gray-50 relative">
+        
+        <!-- View: Dashboard (Resumen) -->
+        <section id="view-dashboard" class="p-4 space-y-4 hidden">
+            <div id="no-vehicle-warning" class="bg-yellow-100 text-yellow-800 p-4 rounded-lg shadow-sm border border-yellow-200 hidden">
+                <p class="font-medium">¡Bienvenido!</p>
+                <p class="text-sm mt-1">Para empezar, necesitas registrar un vehículo.</p>
+                <button onclick="switchTab('vehicles')" class="mt-3 bg-yellow-500 text-white px-4 py-2 rounded shadow-sm text-sm font-bold w-full">Ir a Vehículos</button>
+            </div>
+
+            <div id="dashboard-stats" class="hidden space-y-4">
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex items-center justify-between">
+                    <div>
+                        <p class="text-xs text-gray-500 font-semibold uppercase tracking-wider">Rendimiento Promedio</p>
+                        <p class="text-3xl font-bold text-brand-600 mt-1" id="stat-avg-efficiency">--</p>
+                        <p class="text-xs text-gray-400 mt-1" id="stat-efficiency-unit">km/L</p>
+                    </div>
+                    <div class="p-3 bg-brand-50 rounded-full text-brand-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+                        <p class="text-xs text-gray-500 font-semibold uppercase tracking-wider">Gasto Total</p>
+                        <p class="text-xl font-bold text-gray-800 mt-1" id="stat-total-cost">$0.00</p>
+                    </div>
+                    <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+                        <p class="text-xs text-gray-500 font-semibold uppercase tracking-wider">Distancia Total</p>
+                        <p class="text-xl font-bold text-gray-800 mt-1" id="stat-total-dist">0 <span class="text-sm text-gray-500" id="stat-dist-unit">km</span></p>
+                    </div>
+                </div>
+
+                <h3 class="text-lg font-bold text-gray-800 mt-6 mb-2">Últimos Registros</h3>
+                <div id="fillups-list" class="space-y-3">
+                    <!-- Dinámico -->
+                </div>
+            </div>
+        </section>
+
+        <!-- View: Add Fillup (Cargar) -->
+        <section id="view-add" class="p-4 hidden">
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
+                <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-brand-500"><circle cx="12" cy="12" r="10"/><path d="M12 8v8"/><path d="M8 12h8"/></svg>
+                    Nueva Carga
+                </h2>
+                <form id="form-fillup" class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Fecha</label>
+                        <input type="date" id="fillup-date" required class="w-full border border-gray-300 rounded-lg p-3 outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Odómetro Actual (<span class="unit-dist">km</span>)</label>
+                        <input type="number" step="0.1" id="fillup-odo" required placeholder="Ej. 45000" class="w-full border border-gray-300 rounded-lg p-3 outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition">
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Cantidad (<span class="unit-vol">L</span>)</label>
+                            <input type="number" step="0.01" id="fillup-vol" required placeholder="Ej. 40" class="w-full border border-gray-300 rounded-lg p-3 outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Costo Total ($)</label>
+                            <input type="number" step="0.01" id="fillup-cost" required placeholder="Ej. 800" class="w-full border border-gray-300 rounded-lg p-3 outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Tipo de Ruta Predominante</label>
+                        <div class="grid grid-cols-3 gap-2">
+                            <label class="cursor-pointer">
+                                <input type="radio" name="route-type" value="Ciudad" class="peer sr-only" checked>
+                                <div class="text-center py-2 border border-gray-300 rounded-lg peer-checked:bg-brand-50 peer-checked:border-brand-500 peer-checked:text-brand-600 transition text-sm font-medium">Ciudad</div>
+                            </label>
+                            <label class="cursor-pointer">
+                                <input type="radio" name="route-type" value="Carretera" class="peer sr-only">
+                                <div class="text-center py-2 border border-gray-300 rounded-lg peer-checked:bg-brand-50 peer-checked:border-brand-500 peer-checked:text-brand-600 transition text-sm font-medium">Carretera</div>
+                            </label>
+                            <label class="cursor-pointer">
+                                <input type="radio" name="route-type" value="Mixta" class="peer sr-only">
+                                <div class="text-center py-2 border border-gray-300 rounded-lg peer-checked:bg-brand-50 peer-checked:border-brand-500 peer-checked:text-brand-600 transition text-sm font-medium">Mixta</div>
+                            </label>
+                        </div>
+                    </div>
+                    <label class="flex items-center gap-2 p-3 border border-gray-200 rounded-lg bg-gray-50 cursor-pointer">
+                        <input type="checkbox" id="fillup-fulltank" checked class="w-5 h-5 text-brand-600 rounded focus:ring-brand-500">
+                        <span class="text-sm font-medium text-gray-700">Llené el tanque por completo</span>
+                    </label>
+                    <button type="submit" class="w-full bg-brand-600 text-white font-bold py-3 rounded-lg shadow-md hover:bg-brand-700 active:scale-[0.98] transition">Guardar Carga</button>
+                </form>
+            </div>
+        </section>
+
+        <!-- View: Vehicles (Vehículos) -->
+        <section id="view-vehicles" class="p-4 hidden space-y-4">
+            <button onclick="toggleVehicleForm()" class="w-full bg-gray-800 text-white font-bold py-3 rounded-lg shadow-md flex justify-center items-center gap-2 active:scale-[0.98] transition">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+                Registrar Nuevo Vehículo
+            </button>
+
+            <div id="form-vehicle-container" class="hidden bg-white rounded-xl shadow-sm border border-gray-100 p-5">
+                <h2 class="text-lg font-bold text-gray-800 mb-4">Datos del Vehículo</h2>
+                <form id="form-vehicle" class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Nombre / Apodo</label>
+                        <input type="text" id="veh-name" required placeholder="Ej. Mi Auto, Camioneta Trabajo" class="w-full border border-gray-300 rounded-lg p-3 outline-none focus:border-brand-500 transition">
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Unidad de Distancia</label>
+                            <select id="veh-dist" class="w-full border border-gray-300 rounded-lg p-3 outline-none focus:border-brand-500 bg-white">
+                                <option value="km">Kilómetros (km)</option>
+                                <option value="mi">Millas (mi)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Unidad de Volumen</label>
+                            <select id="veh-vol" class="w-full border border-gray-300 rounded-lg p-3 outline-none focus:border-brand-500 bg-white">
+                                <option value="L">Litros (L)</option>
+                                <option value="gal">Galones (gal)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="flex gap-2 pt-2">
+                        <button type="button" onclick="toggleVehicleForm()" class="flex-1 bg-gray-200 text-gray-800 font-bold py-3 rounded-lg">Cancelar</button>
+                        <button type="submit" class="flex-1 bg-brand-600 text-white font-bold py-3 rounded-lg">Guardar</button>
+                    </div>
+                </form>
+            </div>
+
+            <div id="vehicles-list" class="space-y-3">
+                <!-- Dinámico -->
+            </div>
+        </section>
+
+        <!-- View: Data/Backup (Respaldos) -->
+        <section id="view-data" class="p-4 hidden">
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5 text-center">
+                <h2 class="text-xl font-bold text-gray-800 mb-2">Respaldos y Datos</h2>
+                <p class="text-sm text-gray-500 mb-6">Importa o exporta toda tu información en un archivo especial <span class="font-mono bg-gray-100 px-1 rounded text-brand-600">.gas</span> para nunca perder tus registros.</p>
+                
+                <div class="space-y-4">
+                    <!-- Export / Diskette -->
+                    <button onclick="exportData()" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-bold py-4 rounded-xl shadow-md flex justify-center items-center gap-3 transition active:scale-[0.98]">
+                        <!-- Icono Diskette -->
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+                        Guardar Respaldo (.gas)
+                    </button>
+
+                    <div class="relative flex items-center py-2">
+                        <div class="flex-grow border-t border-gray-200"></div>
+                        <span class="flex-shrink-0 mx-4 text-gray-400 text-sm">O</span>
+                        <div class="flex-grow border-t border-gray-200"></div>
+                    </div>
+
+                    <!-- Import / Folder -->
+                    <label class="w-full bg-gray-800 hover:bg-gray-900 text-white font-bold py-4 rounded-xl shadow-md flex justify-center items-center gap-3 transition active:scale-[0.98] cursor-pointer">
+                        <!-- Icono Carpeta -->
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"/></svg>
+                        Abrir Archivo (.gas)
+                        <input type="file" id="import-file" accept=".gas" class="hidden" onchange="importData(event)">
+                    </label>
+                </div>
+            </div>
+            
+            <div class="mt-6 bg-red-50 rounded-xl border border-red-100 p-5 text-center">
+                <h3 class="text-red-800 font-bold mb-2">Zona de Peligro</h3>
+                <p class="text-xs text-red-600 mb-3">Esto borrará toda la base de datos de tu dispositivo.</p>
+                <button onclick="clearDatabase()" class="text-red-700 bg-white border border-red-200 text-sm font-bold py-2 px-4 rounded shadow-sm">Borrar todos los datos</button>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Bottom Navigation Bar -->
+    <nav class="bg-white border-t border-gray-200 fixed bottom-0 w-full pb-safe shrink-0">
+        <div class="flex justify-around items-center">
+            <button onclick="switchTab('dashboard')" id="tab-dashboard" class="nav-btn flex-1 py-3 flex flex-col items-center gap-1 text-gray-400 hover:text-brand-600 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg>
+                <span class="text-[10px] font-medium">Resumen</span>
+            </button>
+            <button onclick="switchTab('add')" id="tab-add" class="nav-btn flex-1 py-3 flex flex-col items-center gap-1 text-gray-400 hover:text-brand-600 transition">
+                <div class="bg-brand-50 rounded-full p-1"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg></div>
+                <span class="text-[10px] font-medium text-brand-600">Cargar</span>
+            </button>
+            <button onclick="switchTab('vehicles')" id="tab-vehicles" class="nav-btn flex-1 py-3 flex flex-col items-center gap-1 text-gray-400 hover:text-brand-600 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><path d="M9 17h6"/><circle cx="17" cy="17" r="2"/></svg>
+                <span class="text-[10px] font-medium">Vehículos</span>
+            </button>
+            <button onclick="switchTab('data')" id="tab-data" class="nav-btn flex-1 py-3 flex flex-col items-center gap-1 text-gray-400 hover:text-brand-600 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>
+                <span class="text-[10px] font-medium">Datos</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Custom Toast Notification -->
+    <div id="toast" class="fixed top-16 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white px-4 py-2 rounded shadow-lg text-sm transition-opacity duration-300 opacity-0 pointer-events-none z-50">
+        Mensaje
+    </div>
+
+    <!-- PWA Installation / Service Worker Simulation (Offline First Script) -->
+    <script>
+        // Database Configuration
+        const DB_NAME = 'CombustibleDB';
+        const DB_VERSION = 1;
+        let db;
+
+        // Initialize IndexedDB
+        const initDB = () => {
+            return new Promise((resolve, reject) => {
+                const request = indexedDB.open(DB_NAME, DB_VERSION);
+
+                request.onerror = (event) => {
+                    console.error("Database error: ", event.target.error);
+                    reject("Error abriendo DB");
+                };
+
+                request.onsuccess = (event) => {
+                    db = event.target.result;
+                    resolve(db);
+                };
+
+                request.onupgradeneeded = (event) => {
+                    const db = event.target.result;
+                    if (!db.objectStoreNames.contains('vehicles')) {
+                        const vehicleStore = db.createObjectStore('vehicles', { keyPath: 'id' });
+                        vehicleStore.createIndex('timestamp', 'timestamp', { unique: false });
+                    }
+                    if (!db.objectStoreNames.contains('fillups')) {
+                        const fillupStore = db.createObjectStore('fillups', { keyPath: 'id' });
+                        fillupStore.createIndex('vehicleId', 'vehicleId', { unique: false });
+                        fillupStore.createIndex('date', 'date', { unique: false });
+                        fillupStore.createIndex('odo', 'odo', { unique: false });
+                    }
+                };
+            });
+        };
+
+        // DB Helper Methods
+        const dbAction = (storeName, mode, action) => {
+            return new Promise((resolve, reject) => {
+                const transaction = db.transaction([storeName], mode);
+                const store = transaction.objectStore(storeName);
+                const request = action(store);
+                request.onsuccess = () => resolve(request.result);
+                request.onerror = () => reject(request.error);
+            });
+        };
+
+        const getAllFromStore = (storeName) => dbAction(storeName, 'readonly', store => store.getAll());
+        const getFromStore = (storeName, id) => dbAction(storeName, 'readonly', store => store.get(id));
+        const putToStore = (storeName, data) => dbAction(storeName, 'readwrite', store => store.put(data));
+        const deleteFromStore = (storeName, id) => dbAction(storeName, 'readwrite', store => store.delete(id));
+        const clearStore = (storeName) => dbAction(storeName, 'readwrite', store => store.clear());
+
+        // App State
+        let activeVehicleId = null;
+        let vehiclesCache = [];
+        let fillupsCache = [];
+
+        // UI Helpers
+        const showToast = (msg) => {
+            const toast = document.getElementById('toast');
+            toast.textContent = msg;
+            toast.classList.remove('opacity-0');
+            setTimeout(() => toast.classList.add('opacity-0'), 3000);
+        };
+
+        const switchTab = (tabId) => {
+            // Update buttons
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('text-brand-600');
+                btn.classList.add('text-gray-400');
+                const iconContainer = btn.querySelector('div');
+                if (iconContainer) {
+                    iconContainer.classList.remove('bg-brand-50');
+                    btn.querySelector('span').classList.remove('text-brand-600');
+                }
+            });
+            const activeBtn = document.getElementById(`tab-${tabId}`);
+            activeBtn.classList.remove('text-gray-400');
+            activeBtn.classList.add('text-brand-600');
+            const iconContainer = activeBtn.querySelector('div');
+            if (iconContainer) {
+                iconContainer.classList.add('bg-brand-50');
+                activeBtn.querySelector('span').classList.add('text-brand-600');
+            }
+
+            // Update views
+            document.querySelectorAll('main > section').forEach(sec => sec.classList.add('hidden'));
+            document.getElementById(`view-${tabId}`).classList.remove('hidden');
+
+            // Set default date if opening Add view
+            if (tabId === 'add') {
+                document.getElementById('fillup-date').valueAsDate = new Date();
+                updateUnitsInUI();
+            }
+
+            // Refresh dashboard if needed
+            if (tabId === 'dashboard') {
+                refreshDashboard();
+            }
+        };
+
+        const toggleVehicleForm = () => {
+            const form = document.getElementById('form-vehicle-container');
+            form.classList.toggle('hidden');
+        };
+
+        // Core Functions
+        const loadInitialData = async () => {
+            try {
+                await initDB();
+                vehiclesCache = await getAllFromStore('vehicles');
+                
+                const select = document.getElementById('active-vehicle-select');
+                
+                if (vehiclesCache.length === 0) {
+                    select.classList.add('hidden');
+                    switchTab('dashboard');
+                    document.getElementById('no-vehicle-warning').classList.remove('hidden');
+                    document.getElementById('dashboard-stats').classList.add('hidden');
+                    return;
+                }
+
+                document.getElementById('no-vehicle-warning').classList.add('hidden');
+                document.getElementById('dashboard-stats').classList.remove('hidden');
+                
+                // Populate select
+                select.innerHTML = '';
+                vehiclesCache.forEach(v => {
+                    const opt = document.createElement('option');
+                    opt.value = v.id;
+                    opt.textContent = v.name;
+                    select.appendChild(opt);
+                });
+                
+                select.classList.remove('hidden');
+                
+                // Set active
+                if (!activeVehicleId || !vehiclesCache.find(v => v.id === activeVehicleId)) {
+                    activeVehicleId = vehiclesCache[0].id;
+                    select.value = activeVehicleId;
+                }
+
+                // Event listener for select
+                select.removeEventListener('change', handleVehicleChange);
+                select.addEventListener('change', handleVehicleChange);
+
+                await loadFillups();
+                renderVehiclesList();
+                refreshDashboard();
+                updateUnitsInUI();
+
+            } catch (error) {
+                console.error("Initialization failed:", error);
+                showToast("Error al cargar base de datos");
+            }
+        };
+
+        const handleVehicleChange = (e) => {
+            activeVehicleId = e.target.value;
+            loadFillups().then(() => {
+                refreshDashboard();
+                updateUnitsInUI();
+            });
+        };
+
+        const loadFillups = async () => {
+            const allFillups = await getAllFromStore('fillups');
+            fillupsCache = allFillups
+                .filter(f => f.vehicleId === activeVehicleId)
+                .sort((a, b) => b.odo - a.odo); // Descending by odometer
+        };
+
+        const updateUnitsInUI = () => {
+            const vehicle = vehiclesCache.find(v => v.id === activeVehicleId);
+            if (!vehicle) return;
+            
+            document.querySelectorAll('.unit-dist').forEach(el => el.textContent = vehicle.distUnit);
+            document.querySelectorAll('.unit-vol').forEach(el => el.textContent = vehicle.volUnit);
+            document.getElementById('stat-dist-unit').textContent = vehicle.distUnit;
+            document.getElementById('stat-efficiency-unit').textContent = `${vehicle.distUnit}/${vehicle.volUnit}`;
+        };
+
+        // Form Handlers
+        document.getElementById('form-vehicle').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const newVehicle = {
+                id: Date.now().toString(),
+                name: document.getElementById('veh-name').value,
+                distUnit: document.getElementById('veh-dist').value,
+                volUnit: document.getElementById('veh-vol').value,
+                timestamp: Date.now()
+            };
+
+            await putToStore('vehicles', newVehicle);
+            document.getElementById('form-vehicle').reset();
+            toggleVehicleForm();
+            showToast("Vehículo guardado");
+            
+            activeVehicleId = newVehicle.id; // Switch to new vehicle
+            await loadInitialData();
+            switchTab('dashboard');
+        });
+
+        document.getElementById('form-fillup').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (!activeVehicleId) {
+                showToast("Primero debes registrar un vehículo");
+                return;
+            }
+
+            const odo = parseFloat(document.getElementById('fillup-odo').value);
+            const vol = parseFloat(document.getElementById('fillup-vol').value);
+            const cost = parseFloat(document.getElementById('fillup-cost').value);
+            const date = document.getElementById('fillup-date').value;
+            const route = document.querySelector('input[name="route-type"]:checked').value;
+            const isFull = document.getElementById('fillup-fulltank').checked;
+
+            // Basic validation: odometer must be greater than last entry
+            if (fillupsCache.length > 0) {
+                const maxOdo = Math.max(...fillupsCache.map(f => f.odo));
+                if (odo <= maxOdo) {
+                    showToast(`El odómetro debe ser mayor a ${maxOdo}`);
+                    return;
+                }
+            }
+
+            const newFillup = {
+                id: Date.now().toString(),
+                vehicleId: activeVehicleId,
+                date: date,
+                odo: odo,
+                vol: vol,
+                cost: cost,
+                route: route,
+                isFull: isFull,
+                timestamp: Date.now()
+            };
+
+            await putToStore('fillups', newFillup);
+            document.getElementById('form-fillup').reset();
+            showToast("Carga registrada con éxito");
+            
+            await loadFillups();
+            switchTab('dashboard');
+        });
+
+        const deleteVehicle = async (id) => {
+            if(confirm("¿Seguro que deseas eliminar este vehículo y todo su historial de combustible?")) {
+                // Delete vehicle
+                await deleteFromStore('vehicles', id);
+                // Delete associated fillups
+                const allFillups = await getAllFromStore('fillups');
+                for (let f of allFillups) {
+                    if(f.vehicleId === id) await deleteFromStore('fillups', f.id);
+                }
+                
+                showToast("Vehículo eliminado");
+                activeVehicleId = null;
+                await loadInitialData();
+            }
+        };
+
+        const deleteFillup = async (id) => {
+            if(confirm("¿Eliminar este registro de combustible?")) {
+                await deleteFromStore('fillups', id);
+                showToast("Registro eliminado");
+                await loadFillups();
+                refreshDashboard();
+            }
+        };
+
+        // Render functions
+        const renderVehiclesList = () => {
+            const list = document.getElementById('vehicles-list');
+            list.innerHTML = '';
+            vehiclesCache.forEach(v => {
+                list.innerHTML += `
+                    <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex justify-between items-center">
+                        <div>
+                            <h3 class="font-bold text-gray-800">${v.name}</h3>
+                            <p class="text-xs text-gray-500">Unidades: ${v.distUnit} / ${v.volUnit}</p>
+                        </div>
+                        <button onclick="deleteVehicle('${v.id}')" class="p-2 text-red-500 hover:bg-red-50 rounded-full transition">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg>
+                        </button>
+                    </div>
+                `;
+            });
+        };
+
+        const refreshDashboard = () => {
+            if (!activeVehicleId) return;
+
+            const vehicle = vehiclesCache.find(v => v.id === activeVehicleId);
+            const list = document.getElementById('fillups-list');
+            list.innerHTML = '';
+
+            let totalCost = 0;
+            let totalDist = 0;
+            let totalVolForEfficiency = 0;
+            let validSegments = 0;
+
+            // Sort ascending for calculations
+            const calcArr = [...fillupsCache].sort((a, b) => a.odo - b.odo);
+
+            // Populate List (Descending)
+            if (fillupsCache.length === 0) {
+                list.innerHTML = `<p class="text-sm text-gray-500 text-center py-4">No hay cargas registradas para este vehículo.</p>`;
+                document.getElementById('stat-avg-efficiency').textContent = '--';
+                document.getElementById('stat-total-cost').textContent = '$0.00';
+                document.getElementById('stat-total-dist').textContent = '0';
+                return;
+            }
+
+            // Calculations
+            totalCost = calcArr.reduce((sum, f) => sum + f.cost, 0);
+            if (calcArr.length > 1) {
+                totalDist = calcArr[calcArr.length - 1].odo - calcArr[0].odo;
+                
+                // Calculate efficiency (ignore volume of the very first fillup as it got us started)
+                for (let i = 1; i < calcArr.length; i++) {
+                    totalVolForEfficiency += calcArr[i].vol;
+                    validSegments++;
+                }
+            }
+
+            const avgEff = validSegments > 0 ? (totalDist / totalVolForEfficiency).toFixed(2) : '--';
+
+            document.getElementById('stat-avg-efficiency').textContent = avgEff;
+            document.getElementById('stat-total-cost').textContent = `$${totalCost.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+            document.getElementById('stat-total-dist').textContent = totalDist.toLocaleString();
+
+            // Render list items with segment stats
+            fillupsCache.forEach((f, index) => {
+                let segmentDist = '--';
+                let segmentEff = '--';
+                
+                // Find previous fillup chronologically (which is next in our descending array)
+                const prev = fillupsCache[index + 1];
+                if (prev) {
+                    segmentDist = (f.odo - prev.odo).toFixed(1);
+                    if (f.vol > 0) {
+                        segmentEff = (segmentDist / f.vol).toFixed(2);
+                    }
+                }
+
+                // Color codes for route type
+                let badgeColor = "bg-gray-100 text-gray-700";
+                if(f.route === 'Ciudad') badgeColor = "bg-blue-100 text-blue-800";
+                if(f.route === 'Carretera') badgeColor = "bg-green-100 text-green-800";
+                if(f.route === 'Mixta') badgeColor = "bg-purple-100 text-purple-800";
+
+                list.innerHTML += `
+                    <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 relative overflow-hidden">
+                        <div class="absolute top-0 right-0 p-2">
+                             <button onclick="deleteFillup('${f.id}')" class="text-gray-300 hover:text-red-500 transition">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                             </button>
+                        </div>
+                        <div class="flex justify-between items-start mb-2 pr-6">
+                            <div>
+                                <p class="text-sm font-bold text-gray-800">${f.date}</p>
+                                <p class="text-xs text-gray-500 flex items-center gap-1 mt-0.5">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                                    Odo: ${f.odo.toLocaleString()} ${vehicle.distUnit}
+                                </p>
+                            </div>
+                            <span class="text-[10px] font-bold px-2 py-1 rounded-full ${badgeColor}">${f.route}</span>
+                        </div>
+                        <div class="grid grid-cols-4 gap-2 mt-3 pt-3 border-t border-gray-50 text-center">
+                            <div>
+                                <p class="text-[10px] text-gray-400 uppercase">Añadido</p>
+                                <p class="text-sm font-bold text-gray-700">${f.vol} ${vehicle.volUnit}</p>
+                            </div>
+                            <div>
+                                <p class="text-[10px] text-gray-400 uppercase">Costo</p>
+                                <p class="text-sm font-bold text-gray-700">$${f.cost}</p>
+                            </div>
+                            <div>
+                                <p class="text-[10px] text-gray-400 uppercase">Recorrido</p>
+                                <p class="text-sm font-bold text-brand-600">${segmentDist}</p>
+                            </div>
+                            <div>
+                                <p class="text-[10px] text-gray-400 uppercase">Rend.</p>
+                                <p class="text-sm font-bold text-brand-600">${segmentEff}</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+        };
+
+        // Export & Import Logic (.gas file)
+        const exportData = async () => {
+            try {
+                const vehicles = await getAllFromStore('vehicles');
+                const fillups = await getAllFromStore('fillups');
+                
+                const data = {
+                    appName: "CombustibleAPP",
+                    version: "1.0",
+                    exportDate: new Date().toISOString(),
+                    vehicles: vehicles,
+                    fillups: fillups
+                };
+
+                const jsonStr = JSON.stringify(data, null, 2);
+                const blob = new Blob([jsonStr], { type: "application/json" });
+                const url = URL.createObjectURL(blob);
+                
+                const a = document.createElement('a');
+                a.href = url;
+                // Generate filename like: respaldo-combustible-2023-10-25.gas
+                const dateStr = new Date().toISOString().split('T')[0];
+                a.download = `respaldo-combustible-${dateStr}.gas`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                
+                showToast("Archivo .gas guardado");
+            } catch (error) {
+                console.error("Export error", error);
+                showToast("Error al exportar datos");
+            }
+        };
+
+        const importData = (event) => {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = async (e) => {
+                try {
+                    const content = e.target.result;
+                    const data = JSON.parse(content);
+
+                    if (data.appName !== "CombustibleAPP") {
+                        throw new Error("Archivo .gas inválido");
+                    }
+
+                    // Clear existing DB
+                    await clearStore('fillups');
+                    await clearStore('vehicles');
+
+                    // Import new data
+                    for (const v of data.vehicles) {
+                        await putToStore('vehicles', v);
+                    }
+                    for (const f of data.fillups) {
+                        await putToStore('fillups', f);
+                    }
+
+                    showToast("Datos importados con éxito");
+                    event.target.value = ''; // reset file input
+                    activeVehicleId = null; // reset selection
+                    await loadInitialData(); // reload UI
+                    switchTab('dashboard');
+
+                } catch (error) {
+                    console.error("Import error", error);
+                    showToast("El archivo no es válido");
+                }
+            };
+            reader.readAsText(file);
+        };
+
+        const clearDatabase = async () => {
+            const code = prompt("Para confirmar que deseas BORRAR TODOS LOS DATOS, escribe 'BORRAR':");
+            if (code === 'BORRAR') {
+                await clearStore('fillups');
+                await clearStore('vehicles');
+                activeVehicleId = null;
+                showToast("Base de datos limpia");
+                await loadInitialData();
+            } else if (code !== null) {
+                showToast("Operación cancelada. Código incorrecto.");
+            }
+        };
+
+        // Initialization
+        window.addEventListener('DOMContentLoaded', () => {
+            loadInitialData();
+            switchTab('dashboard');
+        });
+
+        // -------------------------------------------------------------
+        // Service Worker setup for actual offline-first PWA behavior
+        // Using a Blob to bypass the need for a separate JS file.
+        // -------------------------------------------------------------
+        if ('serviceWorker' in navigator) {
+            const swCode = `
+                const CACHE_NAME = 'combustible-app-v1';
+                self.addEventListener('install', event => {
+                    self.skipWaiting();
+                });
+                self.addEventListener('activate', event => {
+                    event.waitUntil(clients.claim());
+                });
+                self.addEventListener('fetch', event => {
+                    // Cache strategy: Network First, fallback to cache for HTML, 
+                    // and Cache First for CDN resources.
+                    event.respondWith(
+                        fetch(event.request).catch(() => caches.match(event.request))
+                    );
+                });
+            `;
+            const blob = new Blob([swCode], {type: 'application/javascript'});
+            const swUrl = URL.createObjectURL(blob);
+            
+            navigator.serviceWorker.register(swUrl)
+                .then(reg => console.log('Service Worker registrado (Offline mode enabled)'))
+                .catch(err => console.log('Service Worker falló (Normall in previews)', err));
+        }
+
+    </script>
+</body>
+</html>
