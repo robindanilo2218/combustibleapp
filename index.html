@@ -46,7 +46,7 @@
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 22v-8c0-1.1.9-2 2-2h4c1.1 0 2 .9 2 2v8"/><path d="M11 22H3"/><path d="M15 4h-4a2 2 0 0 0-2 2v4"/><path d="M15 10h-4"/><path d="M21 16v-2.5a3.5 3.5 0 0 0-7 0V22h7v-6z"/><path d="M21 10.5V6a2 2 0 0 0-2-2h-2"/><path d="M17 12h4"/></svg>
             <h1 class="text-xl font-bold tracking-tight">Combustible APP</h1>
         </div>
-        <select id="active-vehicle-select" class="bg-brand-900 border border-brand-500 text-sm rounded px-2 py-1 outline-none hidden max-w-[50vw] sm:max-w-xs truncate">
+        <select id="active-vehicle-select" class="bg-brand-900 border border-brand-500 text-sm rounded px-2 py-1 outline-none hidden max-w-[45vw] sm:max-w-xs truncate">
             <!-- Options populated dynamically -->
         </select>
     </header>
@@ -63,6 +63,44 @@
             </div>
 
             <div id="dashboard-stats" class="hidden space-y-4">
+                
+                <!-- Alertas de Mantenimiento -->
+                <div id="maintenance-alerts" class="hidden space-y-2">
+                    <!-- Generado dinámicamente -->
+                </div>
+
+                <!-- Finanzas y Devaluación -->
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+                    <h3 class="text-xs text-gray-500 font-semibold uppercase tracking-wider mb-3 flex items-center gap-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+                        Inversión y Costo de Propiedad
+                    </h3>
+                    <div class="grid grid-cols-2 gap-3 mb-3">
+                        <div>
+                            <p class="text-[10px] text-gray-400 uppercase">Costo Compra</p>
+                            <p class="text-sm font-bold text-gray-700" id="stat-purchase-price">--</p>
+                        </div>
+                        <div>
+                            <p class="text-[10px] text-gray-400 uppercase">Valor Actual</p>
+                            <p class="text-sm font-bold text-gray-700" id="stat-current-value">--</p>
+                        </div>
+                    </div>
+                    <div class="bg-red-50 p-3 rounded-lg border border-red-100 mb-3 flex justify-between items-center">
+                        <div>
+                            <p class="text-[10px] text-red-600 font-bold uppercase">Devaluación</p>
+                            <p class="text-lg font-bold text-red-700" id="stat-devaluation">--</p>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-[10px] text-gray-500 uppercase">Combustible + Mant.</p>
+                            <p class="text-sm font-bold text-gray-700" id="stat-total-expenses">--</p>
+                        </div>
+                    </div>
+                    <div class="pt-2 border-t border-gray-100 flex justify-between items-center">
+                        <p class="text-xs text-gray-500 font-medium">Costo Total de Propiedad</p>
+                        <p class="text-xl font-black text-gray-800" id="stat-tco">--</p>
+                    </div>
+                </div>
+
                 <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex items-center justify-between">
                     <div>
                         <p class="text-xs text-gray-500 font-semibold uppercase tracking-wider">Rendimiento Promedio</p>
@@ -76,7 +114,7 @@
 
                 <div class="grid grid-cols-2 gap-4">
                     <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
-                        <p class="text-[10px] text-gray-500 font-semibold uppercase tracking-wider">Gasto Total Histórico</p>
+                        <p class="text-[10px] text-gray-500 font-semibold uppercase tracking-wider">Combustible Total</p>
                         <p class="text-xl font-bold text-gray-800 mt-1" id="stat-total-cost">$0.00</p>
                     </div>
                     <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
@@ -84,9 +122,8 @@
                         <p class="text-xl font-bold text-gray-800 mt-1"><span id="stat-total-dist-val">0</span> <span class="text-sm text-gray-500" id="stat-dist-unit">km</span></p>
                     </div>
                     
-                    <!-- Nuevas métricas: Costo por KM y Consumo por KM -->
                     <div class="bg-brand-50 p-4 rounded-xl shadow-sm border border-brand-100">
-                        <p class="text-[10px] text-brand-700 font-semibold uppercase tracking-wider" id="stat-cost-dist-label">Costo por km</p>
+                        <p class="text-[10px] text-brand-700 font-semibold uppercase tracking-wider" id="stat-cost-dist-label">Gas por km</p>
                         <p class="text-xl font-bold text-brand-900 mt-1" id="stat-cost-per-dist">--</p>
                     </div>
                     <div class="bg-brand-50 p-4 rounded-xl shadow-sm border border-brand-100">
@@ -95,18 +132,17 @@
                     </div>
                 </div>
 
-                <h3 class="text-lg font-bold text-gray-800 mt-6 mb-2">Últimos Registros</h3>
+                <h3 class="text-lg font-bold text-gray-800 mt-6 mb-2">Últimas Cargas</h3>
                 <div id="fillups-list" class="space-y-3">
                     <!-- Dinámico -->
                 </div>
             </div>
         </section>
 
-        <!-- View: Add Fillup (Cargar) -->
+        <!-- View: Add Fillup (Cargar Combustible) -->
         <section id="view-add" class="p-4 hidden">
             <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
                 <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
-                    <!-- ÍCONO: Pistola de combustible con gota -->
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-brand-500">
                         <path d="M19 9h1a2 2 0 0 1 2 2v6" />
                         <path d="M3 10h5l4-4h7v6h-4l-1 4h-4l1-4l-3-1H3z" />
@@ -160,36 +196,108 @@
             </div>
         </section>
 
+        <!-- View: Maintenance (Mantenimientos) -->
+        <section id="view-maint" class="p-4 hidden space-y-4">
+            <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
+                <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-blue-500"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+                    Nuevo Mantenimiento
+                </h2>
+                <form id="form-maint" class="space-y-4">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Fecha</label>
+                            <input type="date" id="maint-date" required class="w-full border border-gray-300 rounded-lg p-3 outline-none focus:border-blue-500 transition">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Odómetro (<span class="unit-dist">km</span>)</label>
+                            <input type="number" step="0.1" id="maint-odo" required class="w-full border border-gray-300 rounded-lg p-3 outline-none focus:border-blue-500 transition">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Tipo de Mantenimiento</label>
+                        <select id="maint-type" class="w-full border border-gray-300 rounded-lg p-3 outline-none focus:border-blue-500 bg-white">
+                            <option value="Aceite">Cambio de Aceite</option>
+                            <option value="Llantas">Llantas nuevas / Rotación</option>
+                            <option value="Frenos">Frenos / Fricciones</option>
+                            <option value="Hules">Hules / Suspensión</option>
+                            <option value="Batería">Batería</option>
+                            <option value="General">Servicio General</option>
+                            <option value="Otro">Otro</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Costo Total ($)</label>
+                        <input type="number" step="0.01" id="maint-cost" required class="w-full border border-gray-300 rounded-lg p-3 outline-none focus:border-blue-500 transition">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Notas / Cantidad (Ej. 4 Lts 10W-30)</label>
+                        <input type="text" id="maint-notes" placeholder="Opcional" class="w-full border border-gray-300 rounded-lg p-3 outline-none focus:border-blue-500 transition">
+                    </div>
+                    <div class="bg-blue-50 p-3 rounded-lg border border-blue-100">
+                        <label class="block text-sm font-bold text-blue-800 mb-1">Recordatorio (Calendario)</label>
+                        <p class="text-xs text-blue-600 mb-2">Avisarme para el próximo cambio cuando el odómetro llegue a:</p>
+                        <input type="number" step="0.1" id="maint-next-odo" placeholder="Ej. 50000 (Dejar vacío si no aplica)" class="w-full border border-blue-200 rounded-lg p-3 outline-none focus:border-blue-500 transition">
+                    </div>
+                    <button type="submit" class="w-full bg-blue-600 text-white font-bold py-3 rounded-lg shadow-md hover:bg-blue-700 active:scale-[0.98] transition">Guardar Mantenimiento</button>
+                </form>
+            </div>
+
+            <h3 class="text-lg font-bold text-gray-800 mt-6 mb-2">Historial de Mantenimientos</h3>
+            <div id="maint-list" class="space-y-3">
+                <!-- Dinámico -->
+            </div>
+        </section>
+
         <!-- View: Vehicles (Vehículos) -->
         <section id="view-vehicles" class="p-4 hidden space-y-4">
-            <button onclick="toggleVehicleForm()" class="w-full bg-gray-800 text-white font-bold py-3 rounded-lg shadow-md flex justify-center items-center gap-2 active:scale-[0.98] transition">
+            <button onclick="openVehicleForm()" class="w-full bg-gray-800 text-white font-bold py-3 rounded-lg shadow-md flex justify-center items-center gap-2 active:scale-[0.98] transition">
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
                 Registrar Nuevo Vehículo
             </button>
 
             <div id="form-vehicle-container" class="hidden bg-white rounded-xl shadow-sm border border-gray-100 p-5">
-                <h2 class="text-lg font-bold text-gray-800 mb-4">Datos del Vehículo</h2>
+                <h2 class="text-lg font-bold text-gray-800 mb-4" id="vehicle-form-title">Datos del Vehículo</h2>
                 <form id="form-vehicle" class="space-y-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Nombre / Apodo</label>
-                        <input type="text" id="veh-name" required placeholder="Ej. Mi Auto, Camioneta Trabajo" class="w-full border border-gray-300 rounded-lg p-3 outline-none focus:border-brand-500 transition">
+                    <input type="hidden" id="veh-id"> <!-- Hidden ID for edits -->
+                    
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="col-span-2">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Nombre / Apodo *</label>
+                            <input type="text" id="veh-name" required placeholder="Ej. Mi Auto, Camioneta" class="w-full border border-gray-300 rounded-lg p-3 outline-none focus:border-brand-500 transition">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Número de Placa</label>
+                            <input type="text" id="veh-plate" placeholder="Ej. P356GHC" class="w-full border border-gray-300 rounded-lg p-3 outline-none focus:border-brand-500 transition uppercase">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Año</label>
+                            <input type="number" id="veh-year" placeholder="Ej. 2018" class="w-full border border-gray-300 rounded-lg p-3 outline-none focus:border-brand-500 transition">
+                        </div>
                     </div>
-                    <!-- NUEVO CAMPO: Número de Placa -->
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Número de Placa (Opcional)</label>
-                        <input type="text" id="veh-plate" placeholder="Ej. P356GHC" class="w-full border border-gray-300 rounded-lg p-3 outline-none focus:border-brand-500 transition uppercase">
-                        <p class="text-xs text-gray-500 mt-1">Sirve para sincronizar datos entre móviles sin duplicarlos.</p>
+                    
+                    <div class="bg-gray-50 p-3 rounded-lg border border-gray-200 space-y-3">
+                        <h4 class="text-sm font-bold text-gray-700">Valores para Devaluación</h4>
+                        <div>
+                            <label class="block text-xs font-medium text-gray-600 mb-1">Costo de Compra Original ($)</label>
+                            <input type="number" step="0.01" id="veh-purchase" placeholder="Ej. 10000" class="w-full border border-gray-300 rounded-lg p-3 outline-none focus:border-brand-500 transition bg-white">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-gray-600 mb-1">Valor Actual Estimado ($)</label>
+                            <input type="number" step="0.01" id="veh-current" placeholder="Ej. 8500" class="w-full border border-gray-300 rounded-lg p-3 outline-none focus:border-brand-500 transition bg-white">
+                        </div>
                     </div>
+
                     <div class="grid grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Unidad de Distancia</label>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Distancia</label>
                             <select id="veh-dist" class="w-full border border-gray-300 rounded-lg p-3 outline-none focus:border-brand-500 bg-white">
                                 <option value="km">Kilómetros (km)</option>
                                 <option value="mi">Millas (mi)</option>
                             </select>
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Unidad de Volumen</label>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Volumen</label>
                             <select id="veh-vol" class="w-full border border-gray-300 rounded-lg p-3 outline-none focus:border-brand-500 bg-white">
                                 <option value="gal">Galones (gal)</option>
                                 <option value="L">Litros (L)</option>
@@ -197,7 +305,7 @@
                         </div>
                     </div>
                     <div class="flex gap-2 pt-2">
-                        <button type="button" onclick="toggleVehicleForm()" class="flex-1 bg-gray-200 text-gray-800 font-bold py-3 rounded-lg">Cancelar</button>
+                        <button type="button" onclick="closeVehicleForm()" class="flex-1 bg-gray-200 text-gray-800 font-bold py-3 rounded-lg">Cancelar</button>
                         <button type="submit" class="flex-1 bg-brand-600 text-white font-bold py-3 rounded-lg">Guardar</button>
                     </div>
                 </form>
@@ -215,9 +323,7 @@
                 <p class="text-sm text-gray-500 mb-6">Importa o exporta toda tu información en un archivo especial <span class="font-mono bg-gray-100 px-1 rounded text-brand-600">.gas</span> para nunca perder tus registros.</p>
                 
                 <div class="space-y-4">
-                    <!-- Export / Diskette -->
                     <button onclick="exportData()" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-bold py-4 rounded-xl shadow-md flex justify-center items-center gap-3 transition active:scale-[0.98]">
-                        <!-- Icono Diskette -->
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
                         Guardar Respaldo (.gas)
                     </button>
@@ -228,9 +334,7 @@
                         <div class="flex-grow border-t border-gray-200"></div>
                     </div>
 
-                    <!-- Import / Folder -->
                     <label class="w-full bg-gray-800 hover:bg-gray-900 text-white font-bold py-4 rounded-xl shadow-md flex justify-center items-center gap-3 transition active:scale-[0.98] cursor-pointer">
-                        <!-- Icono Carpeta -->
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"/></svg>
                         Abrir y Sincronizar (.gas)
                         <input type="file" id="import-file" accept=".gas" class="hidden" onchange="importData(event)">
@@ -249,30 +353,33 @@
 
     <!-- Bottom Navigation Bar -->
     <nav class="bg-white border-t border-gray-200 fixed bottom-0 w-full pb-safe shrink-0">
-        <div class="flex justify-around items-center">
+        <div class="flex justify-around items-center px-1">
             <button onclick="switchTab('dashboard')" id="tab-dashboard" class="nav-btn flex-1 py-3 flex flex-col items-center gap-1 text-gray-400 hover:text-brand-600 transition">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg>
-                <span class="text-[10px] font-medium">Resumen</span>
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg>
+                <span class="text-[9px] font-medium">Resumen</span>
             </button>
             <button onclick="switchTab('add')" id="tab-add" class="nav-btn flex-1 py-3 flex flex-col items-center gap-1 text-gray-400 hover:text-brand-600 transition">
-                <!-- ÍCONO: Pistola de combustible con gota (Navegación) -->
                 <div class="bg-brand-50 rounded-full p-1">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M19 9h1a2 2 0 0 1 2 2v6" />
                         <path d="M3 10h5l4-4h7v6h-4l-1 4h-4l1-4l-3-1H3z" />
                         <line x1="13" y1="12" x2="12" y2="14" />
                         <path d="M4 13.5 C 2.5 15 2.5 17 4 17 C 5.5 17 5.5 15 4 13.5 Z" fill="currentColor" stroke="none" />
                     </svg>
                 </div>
-                <span class="text-[10px] font-medium text-brand-600">Cargar</span>
+                <span class="text-[9px] font-medium text-brand-600">Cargar</span>
+            </button>
+            <button onclick="switchTab('maint')" id="tab-maint" class="nav-btn flex-1 py-3 flex flex-col items-center gap-1 text-gray-400 hover:text-blue-600 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+                <span class="text-[9px] font-medium">Taller</span>
             </button>
             <button onclick="switchTab('vehicles')" id="tab-vehicles" class="nav-btn flex-1 py-3 flex flex-col items-center gap-1 text-gray-400 hover:text-brand-600 transition">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><path d="M9 17h6"/><circle cx="17" cy="17" r="2"/></svg>
-                <span class="text-[10px] font-medium">Vehículos</span>
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><path d="M9 17h6"/><circle cx="17" cy="17" r="2"/></svg>
+                <span class="text-[9px] font-medium">Vehículos</span>
             </button>
             <button onclick="switchTab('data')" id="tab-data" class="nav-btn flex-1 py-3 flex flex-col items-center gap-1 text-gray-400 hover:text-brand-600 transition">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>
-                <span class="text-[10px] font-medium">Datos</span>
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>
+                <span class="text-[9px] font-medium">Datos</span>
             </button>
         </div>
     </nav>
@@ -282,11 +389,11 @@
         Mensaje
     </div>
 
-    <!-- PWA Installation / Service Worker Simulation (Offline First Script) -->
+    <!-- Script de la App -->
     <script>
-        // Database Configuration
+        // Database Configuration - Versión 2 para soportar Mantenimientos
         const DB_NAME = 'CombustibleDB';
-        const DB_VERSION = 1;
+        const DB_VERSION = 2;
         let db;
 
         // Initialize IndexedDB
@@ -316,6 +423,12 @@
                         fillupStore.createIndex('date', 'date', { unique: false });
                         fillupStore.createIndex('odo', 'odo', { unique: false });
                     }
+                    // Nuevo para v2: Almacén de mantenimientos
+                    if (!db.objectStoreNames.contains('maintenance')) {
+                        const maintStore = db.createObjectStore('maintenance', { keyPath: 'id' });
+                        maintStore.createIndex('vehicleId', 'vehicleId', { unique: false });
+                        maintStore.createIndex('odo', 'odo', { unique: false });
+                    }
                 };
             });
         };
@@ -341,6 +454,7 @@
         let activeVehicleId = null;
         let vehiclesCache = [];
         let fillupsCache = [];
+        let maintCache = [];
 
         // UI Helpers
         const showToast = (msg) => {
@@ -351,11 +465,10 @@
         };
 
         const switchTab = (tabId) => {
-            // Update buttons
             document.querySelectorAll('.nav-btn').forEach(btn => {
-                btn.classList.remove('text-brand-600');
+                btn.classList.remove('text-brand-600', 'text-blue-600');
                 btn.classList.add('text-gray-400');
-                const iconContainer = btn.querySelector('div');
+                const iconContainer = btn.querySelector('div.bg-brand-50');
                 if (iconContainer) {
                     iconContainer.classList.remove('bg-brand-50');
                     btn.querySelector('span').classList.remove('text-brand-600');
@@ -363,32 +476,66 @@
             });
             const activeBtn = document.getElementById(`tab-${tabId}`);
             activeBtn.classList.remove('text-gray-400');
-            activeBtn.classList.add('text-brand-600');
-            const iconContainer = activeBtn.querySelector('div');
-            if (iconContainer) {
-                iconContainer.classList.add('bg-brand-50');
-                activeBtn.querySelector('span').classList.add('text-brand-600');
+            
+            // Color especial para taller
+            if(tabId === 'maint') {
+                activeBtn.classList.add('text-blue-600');
+            } else {
+                activeBtn.classList.add('text-brand-600');
+                const iconContainer = activeBtn.querySelector('div');
+                if (iconContainer) {
+                    iconContainer.classList.add('bg-brand-50');
+                    activeBtn.querySelector('span').classList.add('text-brand-600');
+                }
             }
 
-            // Update views
             document.querySelectorAll('main > section').forEach(sec => sec.classList.add('hidden'));
             document.getElementById(`view-${tabId}`).classList.remove('hidden');
 
-            // Set default date if opening Add view
             if (tabId === 'add') {
                 document.getElementById('fillup-date').valueAsDate = new Date();
                 updateUnitsInUI();
             }
-
-            // Refresh dashboard if needed
+            if (tabId === 'maint') {
+                document.getElementById('maint-date').valueAsDate = new Date();
+                updateUnitsInUI();
+                renderMaintList();
+            }
             if (tabId === 'dashboard') {
                 refreshDashboard();
             }
         };
 
-        const toggleVehicleForm = () => {
-            const form = document.getElementById('form-vehicle-container');
-            form.classList.toggle('hidden');
+        const openVehicleForm = (id = null) => {
+            const formContainer = document.getElementById('form-vehicle-container');
+            const form = document.getElementById('form-vehicle');
+            formContainer.classList.remove('hidden');
+            
+            if (id) {
+                // Modo Edición
+                document.getElementById('vehicle-form-title').textContent = "Editar Vehículo";
+                const v = vehiclesCache.find(veh => veh.id === id);
+                if (v) {
+                    document.getElementById('veh-id').value = v.id;
+                    document.getElementById('veh-name').value = v.name || '';
+                    document.getElementById('veh-plate').value = v.plate || '';
+                    document.getElementById('veh-year').value = v.year || '';
+                    document.getElementById('veh-purchase').value = v.purchasePrice || '';
+                    document.getElementById('veh-current').value = v.currentValue || '';
+                    document.getElementById('veh-dist').value = v.distUnit || 'km';
+                    document.getElementById('veh-vol').value = v.volUnit || 'gal';
+                }
+            } else {
+                // Modo Nuevo
+                document.getElementById('vehicle-form-title').textContent = "Datos del Vehículo";
+                form.reset();
+                document.getElementById('veh-id').value = "";
+            }
+        };
+
+        const closeVehicleForm = () => {
+            document.getElementById('form-vehicle-container').classList.add('hidden');
+            document.getElementById('form-vehicle').reset();
         };
 
         // Core Functions
@@ -410,7 +557,6 @@
                 document.getElementById('no-vehicle-warning').classList.add('hidden');
                 document.getElementById('dashboard-stats').classList.remove('hidden');
                 
-                // Populate select
                 select.innerHTML = '';
                 vehiclesCache.forEach(v => {
                     const opt = document.createElement('option');
@@ -418,20 +564,18 @@
                     opt.textContent = v.name;
                     select.appendChild(opt);
                 });
-                
                 select.classList.remove('hidden');
                 
-                // Set active
                 if (!activeVehicleId || !vehiclesCache.find(v => v.id === activeVehicleId)) {
                     activeVehicleId = vehiclesCache[0].id;
                     select.value = activeVehicleId;
                 }
 
-                // Event listener for select
                 select.removeEventListener('change', handleVehicleChange);
                 select.addEventListener('change', handleVehicleChange);
 
                 await loadFillups();
+                await loadMaintenance();
                 renderVehiclesList();
                 refreshDashboard();
                 updateUnitsInUI();
@@ -444,7 +588,7 @@
 
         const handleVehicleChange = (e) => {
             activeVehicleId = e.target.value;
-            loadFillups().then(() => {
+            Promise.all([loadFillups(), loadMaintenance()]).then(() => {
                 refreshDashboard();
                 updateUnitsInUI();
             });
@@ -454,7 +598,14 @@
             const allFillups = await getAllFromStore('fillups');
             fillupsCache = allFillups
                 .filter(f => f.vehicleId === activeVehicleId)
-                .sort((a, b) => b.odo - a.odo); // Descending by odometer
+                .sort((a, b) => b.odo - a.odo);
+        };
+
+        const loadMaintenance = async () => {
+            const allMaint = await getAllFromStore('maintenance');
+            maintCache = allMaint
+                .filter(m => m.vehicleId === activeVehicleId)
+                .sort((a, b) => b.odo - a.odo);
         };
 
         const updateUnitsInUI = () => {
@@ -465,84 +616,98 @@
             document.querySelectorAll('.unit-vol').forEach(el => el.textContent = vehicle.volUnit);
             document.getElementById('stat-dist-unit').textContent = vehicle.distUnit;
             document.getElementById('stat-efficiency-unit').textContent = `${vehicle.distUnit}/${vehicle.volUnit}`;
-            document.getElementById('stat-cost-dist-label').textContent = `Costo por ${vehicle.distUnit}`;
+            document.getElementById('stat-cost-dist-label').textContent = `Gas por ${vehicle.distUnit}`;
             document.getElementById('stat-vol-dist-label').textContent = `Consumo por ${vehicle.distUnit}`;
         };
 
         // Form Handlers
         document.getElementById('form-vehicle').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const newVehicle = {
-                id: Date.now().toString(),
+            const editId = document.getElementById('veh-id').value;
+            
+            const vehicleData = {
+                id: editId ? editId : Date.now().toString(),
                 name: document.getElementById('veh-name').value,
                 plate: document.getElementById('veh-plate').value.trim().toUpperCase(),
+                year: document.getElementById('veh-year').value,
+                purchasePrice: parseFloat(document.getElementById('veh-purchase').value) || 0,
+                currentValue: parseFloat(document.getElementById('veh-current').value) || 0,
                 distUnit: document.getElementById('veh-dist').value,
                 volUnit: document.getElementById('veh-vol').value,
                 timestamp: Date.now()
             };
 
-            await putToStore('vehicles', newVehicle);
-            document.getElementById('form-vehicle').reset();
-            toggleVehicleForm();
-            showToast("Vehículo guardado");
+            await putToStore('vehicles', vehicleData);
+            closeVehicleForm();
+            showToast(editId ? "Vehículo actualizado" : "Vehículo guardado");
             
-            activeVehicleId = newVehicle.id; // Switch to new vehicle
+            if (!editId) activeVehicleId = vehicleData.id;
             await loadInitialData();
             switchTab('dashboard');
         });
 
         document.getElementById('form-fillup').addEventListener('submit', async (e) => {
             e.preventDefault();
-            if (!activeVehicleId) {
-                showToast("Primero debes registrar un vehículo");
-                return;
-            }
+            if (!activeVehicleId) { showToast("Registra un vehículo"); return; }
 
             const odo = parseFloat(document.getElementById('fillup-odo').value);
-            const vol = parseFloat(document.getElementById('fillup-vol').value);
-            const cost = parseFloat(document.getElementById('fillup-cost').value);
-            const date = document.getElementById('fillup-date').value;
-            const route = document.querySelector('input[name="route-type"]:checked').value;
-            const isFull = document.getElementById('fillup-fulltank').checked;
-
-            // Basic validation: odometer must be greater than last entry
             if (fillupsCache.length > 0) {
                 const maxOdo = Math.max(...fillupsCache.map(f => f.odo));
-                if (odo <= maxOdo) {
-                    showToast(`El odómetro debe ser mayor a ${maxOdo}`);
-                    return;
-                }
+                if (odo <= maxOdo) { showToast(`El odómetro debe ser mayor a ${maxOdo}`); return; }
             }
 
             const newFillup = {
                 id: Date.now().toString(),
                 vehicleId: activeVehicleId,
-                date: date,
+                date: document.getElementById('fillup-date').value,
                 odo: odo,
-                vol: vol,
-                cost: cost,
-                route: route,
-                isFull: isFull,
+                vol: parseFloat(document.getElementById('fillup-vol').value),
+                cost: parseFloat(document.getElementById('fillup-cost').value),
+                route: document.querySelector('input[name="route-type"]:checked').value,
+                isFull: document.getElementById('fillup-fulltank').checked,
                 timestamp: Date.now()
             };
 
             await putToStore('fillups', newFillup);
             document.getElementById('form-fillup').reset();
-            showToast("Carga registrada con éxito");
-            
+            showToast("Carga registrada");
             await loadFillups();
             switchTab('dashboard');
         });
 
+        document.getElementById('form-maint').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (!activeVehicleId) { showToast("Registra un vehículo"); return; }
+
+            const nextOdoRaw = document.getElementById('maint-next-odo').value;
+            
+            const newMaint = {
+                id: Date.now().toString(),
+                vehicleId: activeVehicleId,
+                date: document.getElementById('maint-date').value,
+                odo: parseFloat(document.getElementById('maint-odo').value),
+                type: document.getElementById('maint-type').value,
+                cost: parseFloat(document.getElementById('maint-cost').value),
+                notes: document.getElementById('maint-notes').value,
+                nextOdo: nextOdoRaw ? parseFloat(nextOdoRaw) : null,
+                timestamp: Date.now()
+            };
+
+            await putToStore('maintenance', newMaint);
+            document.getElementById('form-maint').reset();
+            document.getElementById('maint-date').valueAsDate = new Date();
+            showToast("Mantenimiento guardado");
+            await loadMaintenance();
+            renderMaintList();
+        });
+
         const deleteVehicle = async (id) => {
             if(confirm("¿Seguro que deseas eliminar este vehículo y todo su historial?")) {
-                // Delete vehicle
                 await deleteFromStore('vehicles', id);
-                // Delete associated fillups
-                const allFillups = await getAllFromStore('fillups');
-                for (let f of allFillups) {
-                    if(f.vehicleId === id) await deleteFromStore('fillups', f.id);
-                }
+                const allF = await getAllFromStore('fillups');
+                for (let f of allF) { if(f.vehicleId === id) await deleteFromStore('fillups', f.id); }
+                const allM = await getAllFromStore('maintenance');
+                for (let m of allM) { if(m.vehicleId === id) await deleteFromStore('maintenance', m.id); }
                 
                 showToast("Vehículo eliminado");
                 activeVehicleId = null;
@@ -559,6 +724,15 @@
             }
         };
 
+        const deleteMaint = async (id) => {
+            if(confirm("¿Eliminar este registro de mantenimiento?")) {
+                await deleteFromStore('maintenance', id);
+                showToast("Registro eliminado");
+                await loadMaintenance();
+                renderMaintList();
+            }
+        };
+
         // Render functions
         const renderVehiclesList = () => {
             const list = document.getElementById('vehicles-list');
@@ -567,15 +741,52 @@
                 list.innerHTML += `
                     <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex justify-between items-center">
                         <div>
-                            <h3 class="font-bold text-gray-800">${v.name}</h3>
+                            <h3 class="font-bold text-gray-800">${v.name} ${v.year ? `<span class="text-xs font-normal text-gray-500">(${v.year})</span>` : ''}</h3>
                             <p class="text-xs text-gray-500 mt-1">
                                 ${v.plate ? `<span class="bg-gray-100 text-gray-700 px-1.5 py-0.5 rounded mr-1 font-mono border border-gray-200">${v.plate}</span>` : ''}
                                 ${v.distUnit} / ${v.volUnit}
                             </p>
                         </div>
-                        <button onclick="deleteVehicle('${v.id}')" class="p-2 text-red-500 hover:bg-red-50 rounded-full transition">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg>
-                        </button>
+                        <div class="flex gap-2">
+                            <button onclick="openVehicleForm('${v.id}')" class="p-2 text-blue-500 hover:bg-blue-50 rounded-full transition">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                            </button>
+                            <button onclick="deleteVehicle('${v.id}')" class="p-2 text-red-500 hover:bg-red-50 rounded-full transition">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+        };
+
+        const renderMaintList = () => {
+            const list = document.getElementById('maint-list');
+            list.innerHTML = '';
+            const vehicle = vehiclesCache.find(v => v.id === activeVehicleId);
+
+            if(maintCache.length === 0) {
+                list.innerHTML = `<p class="text-sm text-gray-500 text-center py-4">No hay mantenimientos registrados.</p>`;
+                return;
+            }
+
+            maintCache.forEach(m => {
+                list.innerHTML += `
+                    <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 relative overflow-hidden">
+                        <div class="absolute top-0 right-0 p-2">
+                             <button onclick="deleteMaint('${m.id}')" class="text-gray-300 hover:text-red-500 transition">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                             </button>
+                        </div>
+                        <div class="flex justify-between items-start mb-2 pr-6">
+                            <div>
+                                <p class="text-sm font-bold text-blue-800">${m.type}</p>
+                                <p class="text-xs text-gray-500">${m.date} | Odo: ${m.odo.toLocaleString()} ${vehicle.distUnit}</p>
+                            </div>
+                            <span class="text-sm font-bold text-gray-800">$${m.cost}</span>
+                        </div>
+                        ${m.notes ? `<p class="text-xs text-gray-600 bg-gray-50 p-2 rounded mt-2 border border-gray-100">${m.notes}</p>` : ''}
+                        ${m.nextOdo ? `<p class="text-[10px] text-blue-600 font-bold mt-2 flex items-center gap-1"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> Próximo a los: ${m.nextOdo.toLocaleString()} ${vehicle.distUnit}</p>` : ''}
                     </div>
                 `;
             });
@@ -588,135 +799,179 @@
             const list = document.getElementById('fillups-list');
             list.innerHTML = '';
 
-            let totalCost = 0;
-            let totalCostForEfficiency = 0;
+            // Cálculos financieros
+            let totalFuelCost = 0;
+            let totalMaintCost = maintCache.reduce((sum, m) => sum + m.cost, 0);
             let totalDist = 0;
             let totalVolForEfficiency = 0;
+            let totalCostForEfficiency = 0;
             let validSegments = 0;
+            let maxOdo = 0;
 
-            // Sort ascending for calculations
             const calcArr = [...fillupsCache].sort((a, b) => a.odo - b.odo);
+            
+            // Hallar el odómetro máximo actual (entre gasolina y mantenimientos)
+            if (calcArr.length > 0) maxOdo = Math.max(maxOdo, calcArr[calcArr.length - 1].odo);
+            if (maintCache.length > 0) maxOdo = Math.max(maxOdo, maintCache[0].odo);
 
-            // Populate List (Descending)
+            // Alertas de mantenimiento
+            const alertBox = document.getElementById('maintenance-alerts');
+            alertBox.innerHTML = '';
+            let hasAlerts = false;
+
+            maintCache.forEach(m => {
+                if (m.nextOdo) {
+                    const diff = m.nextOdo - maxOdo;
+                    if (diff <= 0) {
+                        hasAlerts = true;
+                        alertBox.innerHTML += `
+                            <div class="bg-red-100 border border-red-200 text-red-800 px-4 py-3 rounded-xl shadow-sm text-sm flex items-start gap-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" class="mt-0.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+                                <div><strong class="block">¡Mantenimiento Vencido!</strong> Toca: ${m.type} a los ${m.nextOdo} ${vehicle.distUnit}</div>
+                            </div>`;
+                    } else if (diff <= 500) { // Alerta a 500 km/mi de diferencia
+                        hasAlerts = true;
+                        alertBox.innerHTML += `
+                            <div class="bg-yellow-100 border border-yellow-200 text-yellow-800 px-4 py-3 rounded-xl shadow-sm text-sm flex items-start gap-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" class="mt-0.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                                <div><strong class="block">Mantenimiento Próximo</strong> Toca: ${m.type} a los ${m.nextOdo} ${vehicle.distUnit}</div>
+                            </div>`;
+                    }
+                }
+            });
+            
+            if (hasAlerts) {
+                alertBox.classList.remove('hidden');
+            } else {
+                alertBox.classList.add('hidden');
+            }
+
             if (fillupsCache.length === 0) {
-                list.innerHTML = `<p class="text-sm text-gray-500 text-center py-4">No hay cargas registradas para este vehículo.</p>`;
+                list.innerHTML = `<p class="text-sm text-gray-500 text-center py-4">No hay cargas registradas.</p>`;
                 document.getElementById('stat-avg-efficiency').textContent = '--';
                 document.getElementById('stat-total-cost').textContent = '$0.00';
                 document.getElementById('stat-total-dist-val').textContent = '0';
                 document.getElementById('stat-cost-per-dist').textContent = '--';
                 document.getElementById('stat-vol-per-dist').textContent = '--';
-                return;
-            }
-
-            // Calculations
-            totalCost = calcArr.reduce((sum, f) => sum + f.cost, 0);
-            
-            if (calcArr.length > 1) {
-                totalDist = calcArr[calcArr.length - 1].odo - calcArr[0].odo;
-                
-                // Calculate efficiency (ignore volume & cost of the very first fillup as it got us started before tracking distance)
-                for (let i = 1; i < calcArr.length; i++) {
-                    totalVolForEfficiency += calcArr[i].vol;
-                    totalCostForEfficiency += calcArr[i].cost;
-                    validSegments++;
-                }
-            }
-
-            const avgEff = validSegments > 0 ? (totalDist / totalVolForEfficiency).toFixed(2) : '--';
-            const avgCostPerDist = validSegments > 0 ? (totalCostForEfficiency / totalDist).toFixed(2) : '--';
-            const avgVolPerDist = validSegments > 0 ? (totalVolForEfficiency / totalDist).toFixed(3) : '--';
-
-            document.getElementById('stat-avg-efficiency').textContent = avgEff;
-            document.getElementById('stat-total-cost').textContent = `$${totalCost.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
-            document.getElementById('stat-total-dist-val').textContent = totalDist.toLocaleString();
-            document.getElementById('stat-cost-per-dist').textContent = avgCostPerDist !== '--' ? `$${avgCostPerDist}` : '--';
-            document.getElementById('stat-vol-per-dist').textContent = avgVolPerDist !== '--' ? `${avgVolPerDist}` : '--';
-
-            // Render list items with segment stats
-            fillupsCache.forEach((f, index) => {
-                let segmentDist = '--';
-                let segmentEff = '--';
-                let costPerDistSeg = '--';
-                let volPerDistSeg = '--';
-                
-                // Find previous fillup chronologically (which is next in our descending array)
-                const prev = fillupsCache[index + 1];
-                if (prev) {
-                    segmentDist = (f.odo - prev.odo).toFixed(1);
-                    if (f.vol > 0 && segmentDist > 0) {
-                        segmentEff = (segmentDist / f.vol).toFixed(2);
-                        costPerDistSeg = (f.cost / segmentDist).toFixed(2);
-                        volPerDistSeg = (f.vol / segmentDist).toFixed(3);
+            } else {
+                totalFuelCost = calcArr.reduce((sum, f) => sum + f.cost, 0);
+                if (calcArr.length > 1) {
+                    totalDist = calcArr[calcArr.length - 1].odo - calcArr[0].odo;
+                    for (let i = 1; i < calcArr.length; i++) {
+                        totalVolForEfficiency += calcArr[i].vol;
+                        totalCostForEfficiency += calcArr[i].cost;
+                        validSegments++;
                     }
                 }
 
-                // Color codes for route type
-                let badgeColor = "bg-gray-100 text-gray-700";
-                let routeDisplay = f.route;
-                if(f.route === 'Ciudad') { badgeColor = "bg-blue-100 text-blue-800"; routeDisplay = "Ciudad"; }
-                if(f.route === 'Carretera') { badgeColor = "bg-green-100 text-green-800"; routeDisplay = "Carretera"; }
-                if(f.route === 'Mixta') { badgeColor = "bg-purple-100 text-purple-800"; routeDisplay = "Mixta"; }
+                const avgEff = validSegments > 0 ? (totalDist / totalVolForEfficiency).toFixed(2) : '--';
+                const avgCostPerDist = validSegments > 0 ? (totalCostForEfficiency / totalDist).toFixed(2) : '--';
+                const avgVolPerDist = validSegments > 0 ? (totalVolForEfficiency / totalDist).toFixed(3) : '--';
 
-                list.innerHTML += `
-                    <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 relative overflow-hidden">
-                        <div class="absolute top-0 right-0 p-2">
-                             <button onclick="deleteFillup('${f.id}')" class="text-gray-300 hover:text-red-500 transition">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-                             </button>
+                document.getElementById('stat-avg-efficiency').textContent = avgEff;
+                document.getElementById('stat-total-cost').textContent = `$${totalFuelCost.toLocaleString('en-US', {minimumFractionDigits: 2})}`;
+                document.getElementById('stat-total-dist-val').textContent = totalDist.toLocaleString();
+                document.getElementById('stat-cost-per-dist').textContent = avgCostPerDist !== '--' ? `$${avgCostPerDist}` : '--';
+                document.getElementById('stat-vol-per-dist').textContent = avgVolPerDist !== '--' ? `${avgVolPerDist}` : '--';
+
+                fillupsCache.forEach((f, index) => {
+                    let segmentDist = '--';
+                    let segmentEff = '--';
+                    let costPerDistSeg = '--';
+                    let volPerDistSeg = '--';
+                    
+                    const prev = fillupsCache[index + 1];
+                    if (prev) {
+                        segmentDist = (f.odo - prev.odo).toFixed(1);
+                        if (f.vol > 0 && segmentDist > 0) {
+                            segmentEff = (segmentDist / f.vol).toFixed(2);
+                            costPerDistSeg = (f.cost / segmentDist).toFixed(2);
+                            volPerDistSeg = (f.vol / segmentDist).toFixed(3);
+                        }
+                    }
+
+                    let badgeColor = "bg-gray-100 text-gray-700";
+                    let routeDisplay = f.route;
+                    if(f.route === 'Ciudad') { badgeColor = "bg-blue-100 text-blue-800"; routeDisplay = "Ciudad"; }
+                    if(f.route === 'Carretera') { badgeColor = "bg-green-100 text-green-800"; routeDisplay = "Carretera"; }
+                    if(f.route === 'Mixta') { badgeColor = "bg-purple-100 text-purple-800"; routeDisplay = "Mixta"; }
+
+                    list.innerHTML += `
+                        <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 relative overflow-hidden">
+                            <div class="absolute top-0 right-0 p-2">
+                                 <button onclick="deleteFillup('${f.id}')" class="text-gray-300 hover:text-red-500 transition">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                                 </button>
+                            </div>
+                            <div class="flex justify-between items-start mb-2 pr-6">
+                                <div>
+                                    <p class="text-sm font-bold text-gray-800">${f.date}</p>
+                                    <p class="text-xs text-gray-500 flex items-center gap-1 mt-0.5">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                                        Odo: ${f.odo.toLocaleString()} ${vehicle.distUnit}
+                                    </p>
+                                </div>
+                                <span class="text-[10px] font-bold px-2 py-1 rounded-full ${badgeColor}">${routeDisplay}</span>
+                            </div>
+                            <div class="grid grid-cols-3 gap-y-3 gap-x-2 mt-3 pt-3 border-t border-gray-50 text-center">
+                                <div>
+                                    <p class="text-[9px] text-gray-400 uppercase">Añadido</p>
+                                    <p class="text-sm font-bold text-gray-700">${f.vol} <span class="text-[9px] font-normal">${vehicle.volUnit}</span></p>
+                                </div>
+                                <div>
+                                    <p class="text-[9px] text-gray-400 uppercase">Costo</p>
+                                    <p class="text-sm font-bold text-gray-700">$${f.cost}</p>
+                                </div>
+                                <div>
+                                    <p class="text-[9px] text-gray-400 uppercase">Recorrido</p>
+                                    <p class="text-sm font-bold text-brand-600">${segmentDist} <span class="text-[9px] font-normal">${vehicle.distUnit}</span></p>
+                                </div>
+                                <div>
+                                    <p class="text-[9px] text-gray-400 uppercase" title="Rendimiento">Rend.</p>
+                                    <p class="text-sm font-bold text-brand-600">${segmentEff}</p>
+                                </div>
+                                <div>
+                                    <p class="text-[9px] text-gray-400 uppercase" title="Costo por distancia">Costo/${vehicle.distUnit}</p>
+                                    <p class="text-sm font-bold text-brand-600">${costPerDistSeg !== '--' ? '$' + costPerDistSeg : '--'}</p>
+                                </div>
+                                <div>
+                                    <p class="text-[9px] text-gray-400 uppercase" title="Consumo por distancia">${vehicle.volUnit}/${vehicle.distUnit}</p>
+                                    <p class="text-sm font-bold text-brand-600">${volPerDistSeg}</p>
+                                </div>
+                            </div>
                         </div>
-                        <div class="flex justify-between items-start mb-2 pr-6">
-                            <div>
-                                <p class="text-sm font-bold text-gray-800">${f.date}</p>
-                                <p class="text-xs text-gray-500 flex items-center gap-1 mt-0.5">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                                    Odo: ${f.odo.toLocaleString()} ${vehicle.distUnit}
-                                </p>
-                            </div>
-                            <span class="text-[10px] font-bold px-2 py-1 rounded-full ${badgeColor}">${routeDisplay}</span>
-                        </div>
-                        <div class="grid grid-cols-3 gap-y-3 gap-x-2 mt-3 pt-3 border-t border-gray-50 text-center">
-                            <div>
-                                <p class="text-[9px] text-gray-400 uppercase">Añadido</p>
-                                <p class="text-sm font-bold text-gray-700">${f.vol} <span class="text-[9px] font-normal">${vehicle.volUnit}</span></p>
-                            </div>
-                            <div>
-                                <p class="text-[9px] text-gray-400 uppercase">Costo</p>
-                                <p class="text-sm font-bold text-gray-700">$${f.cost}</p>
-                            </div>
-                            <div>
-                                <p class="text-[9px] text-gray-400 uppercase">Recorrido</p>
-                                <p class="text-sm font-bold text-brand-600">${segmentDist} <span class="text-[9px] font-normal">${vehicle.distUnit}</span></p>
-                            </div>
-                            <div>
-                                <p class="text-[9px] text-gray-400 uppercase" title="Rendimiento">Rend.</p>
-                                <p class="text-sm font-bold text-brand-600">${segmentEff}</p>
-                            </div>
-                            <div>
-                                <p class="text-[9px] text-gray-400 uppercase" title="Costo por distancia">Costo/${vehicle.distUnit}</p>
-                                <p class="text-sm font-bold text-brand-600">${costPerDistSeg !== '--' ? '$' + costPerDistSeg : '--'}</p>
-                            </div>
-                            <div>
-                                <p class="text-[9px] text-gray-400 uppercase" title="Consumo por distancia">${vehicle.volUnit}/${vehicle.distUnit}</p>
-                                <p class="text-sm font-bold text-brand-600">${volPerDistSeg}</p>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            });
+                    `;
+                });
+            }
+
+            // Calculo de Tarjeta de Inversión y Devaluación
+            const purPrice = vehicle.purchasePrice || 0;
+            const curVal = vehicle.currentValue || 0;
+            const deval = purPrice > 0 ? (purPrice - curVal) : 0;
+            const expenses = totalFuelCost + totalMaintCost;
+            const tco = deval + expenses;
+
+            document.getElementById('stat-purchase-price').textContent = `$${purPrice.toLocaleString()}`;
+            document.getElementById('stat-current-value').textContent = `$${curVal.toLocaleString()}`;
+            document.getElementById('stat-devaluation').textContent = `$${deval.toLocaleString()}`;
+            document.getElementById('stat-total-expenses').textContent = `$${expenses.toLocaleString()}`;
+            document.getElementById('stat-tco').textContent = `$${tco.toLocaleString()}`;
         };
 
-        // Export & Import Logic (.gas file) con Sincronización Inteligente
+        // Export & Import Logic (.gas file) v1.2
         const exportData = async () => {
             try {
                 const vehicles = await getAllFromStore('vehicles');
                 const fillups = await getAllFromStore('fillups');
+                const maintenance = await getAllFromStore('maintenance');
                 
                 const data = {
                     appName: "CombustibleAPP",
-                    version: "1.1", // Subimos la versión para control
+                    version: "1.2",
                     exportDate: new Date().toISOString(),
                     vehicles: vehicles,
-                    fillups: fillups
+                    fillups: fillups,
+                    maintenance: maintenance
                 };
 
                 const jsonStr = JSON.stringify(data, null, 2);
@@ -725,7 +980,6 @@
                 
                 const a = document.createElement('a');
                 a.href = url;
-                // Generate filename like: respaldo-combustible-2023-10-25.gas
                 const dateStr = new Date().toISOString().split('T')[0];
                 a.download = `respaldo-combustible-${dateStr}.gas`;
                 document.body.appendChild(a);
@@ -756,57 +1010,51 @@
 
                     const existingVehicles = await getAllFromStore('vehicles');
                     const existingFillups = await getAllFromStore('fillups');
+                    const existingMaint = await getAllFromStore('maintenance');
                     
-                    // Mapa para relacionar IDs importados con IDs locales (si coinciden por placa)
                     const vehicleIdMap = {};
 
-                    // 1. Procesar Vehículos
                     for (const impV of data.vehicles) {
                         let matchedV = null;
-                        // Si el vehículo importado tiene placa, buscamos si ya existe uno con esa misma placa
                         if (impV.plate) {
                             matchedV = existingVehicles.find(ev => ev.plate === impV.plate);
                         }
                         
                         if (matchedV) {
-                            // Actualizar vehículo existente pero mantener el ID local
                             vehicleIdMap[impV.id] = matchedV.id;
                             matchedV.name = impV.name;
+                            matchedV.year = impV.year || matchedV.year;
+                            matchedV.purchasePrice = impV.purchasePrice || matchedV.purchasePrice;
+                            matchedV.currentValue = impV.currentValue || matchedV.currentValue;
                             matchedV.distUnit = impV.distUnit;
                             matchedV.volUnit = impV.volUnit;
-                            // Se asume que la placa es la misma
                             await putToStore('vehicles', matchedV);
                         } else {
-                            // Si no hay placa o no coincide, es un vehículo nuevo
                             vehicleIdMap[impV.id] = impV.id;
                             await putToStore('vehicles', impV);
                         }
                     }
 
-                    // 2. Procesar Cargas de Combustible
                     for (const impF of data.fillups) {
-                        // Reasignar al ID del vehículo correcto según nuestro mapa
-                        if (vehicleIdMap[impF.vehicleId]) {
-                            impF.vehicleId = vehicleIdMap[impF.vehicleId];
-                        }
-
-                        // Verificar si ya existe esta misma carga (mismo vehículo y mismo odómetro)
-                        const isDuplicate = existingFillups.find(ef => 
-                            ef.vehicleId === impF.vehicleId && ef.odo === impF.odo && ef.id !== impF.id
-                        );
-
-                        if (isDuplicate) {
-                            // Actualizar el registro existente usando el ID que ya tenemos localmente
-                            impF.id = isDuplicate.id;
-                        }
-                        
+                        if (vehicleIdMap[impF.vehicleId]) impF.vehicleId = vehicleIdMap[impF.vehicleId];
+                        const isDuplicate = existingFillups.find(ef => ef.vehicleId === impF.vehicleId && ef.odo === impF.odo && ef.id !== impF.id);
+                        if (isDuplicate) impF.id = isDuplicate.id;
                         await putToStore('fillups', impF);
                     }
 
+                    if (data.maintenance) {
+                        for (const impM of data.maintenance) {
+                            if (vehicleIdMap[impM.vehicleId]) impM.vehicleId = vehicleIdMap[impM.vehicleId];
+                            const isDuplicate = existingMaint.find(em => em.vehicleId === impM.vehicleId && em.odo === impM.odo && em.type === impM.type && em.id !== impM.id);
+                            if (isDuplicate) impM.id = isDuplicate.id;
+                            await putToStore('maintenance', impM);
+                        }
+                    }
+
                     showToast("Datos combinados y sincronizados");
-                    event.target.value = ''; // reset file input
-                    activeVehicleId = null; // reset selection
-                    await loadInitialData(); // reload UI
+                    event.target.value = ''; 
+                    activeVehicleId = null; 
+                    await loadInitialData(); 
                     switchTab('dashboard');
 
                 } catch (error) {
@@ -822,6 +1070,7 @@
             if (code === 'BORRAR') {
                 await clearStore('fillups');
                 await clearStore('vehicles');
+                await clearStore('maintenance');
                 activeVehicleId = null;
                 showToast("Base de datos limpia");
                 await loadInitialData();
@@ -838,11 +1087,10 @@
 
         // -------------------------------------------------------------
         // Service Worker setup for actual offline-first PWA behavior
-        // Using a Blob to bypass the need for a separate JS file.
         // -------------------------------------------------------------
         if ('serviceWorker' in navigator) {
             const swCode = `
-                const CACHE_NAME = 'combustible-app-v1';
+                const CACHE_NAME = 'combustible-app-v2';
                 self.addEventListener('install', event => {
                     self.skipWaiting();
                 });
@@ -850,8 +1098,6 @@
                     event.waitUntil(clients.claim());
                 });
                 self.addEventListener('fetch', event => {
-                    // Cache strategy: Network First, fallback to cache for HTML, 
-                    // and Cache First for CDN resources.
                     event.respondWith(
                         fetch(event.request).catch(() => caches.match(event.request))
                     );
@@ -861,8 +1107,8 @@
             const swUrl = URL.createObjectURL(blob);
             
             navigator.serviceWorker.register(swUrl)
-                .then(reg => console.log('Service Worker registrado (Offline mode enabled)'))
-                .catch(err => console.log('Service Worker falló (Normal in previews)', err));
+                .then(reg => console.log('Service Worker registrado'))
+                .catch(err => console.log('Service Worker falló', err));
         }
 
     </script>
