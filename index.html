@@ -4,6 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Combustible APP</title>
+    
+    <!-- PWA Meta Tags & Manifest -->
+    <meta name="theme-color" content="#16a34a">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Combustible">
+    
+    <!-- Ícono para iOS -->
+    <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgcng9IjExMiIgZmlsbD0iIzE2YTM0YSIvPjxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDEwMCwgMTAwKSBzY2FsZSgxMykiIGZpbGw9Im5vbmUiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj48cGF0aCBkPSJNMTkgOWgxYTIgMiAwIDAgMSAyIDJ2NiIvPjxwYXRoIGQ9Ik0zIDEwaDVsNC00aDd2NmgtNGwtMSA0aC00bDEtNGwtMy0xSDN6Ii8+PGxpbmUgeDE9IjEzIiB5MT0iMTIiIHgyPSIxMiIgeTI9IjE0Ii8+PHBhdGggZD0iTTQgMTMuNSBDIDIuNSAxNSAyLjUgMTcgNCAxNyBDIDUuNSAxNyA1LjUgMTUgNCAxMy41IFoiIGZpbGw9IndoaXRlIiBzdHJva2U9Im5vbmUiLz48L2c+PC9zdmc+">
+    
+    <!-- Manifest.json integrado en Base64 -->
+    <link rel="manifest" href="data:application/json;base64,eyJuYW1lIjoiQ29tYnVzdGlibGUgQVBQIiwic2hvcnRfbmFtZSI6IkNvbWJ1c3RpYmxlIiwiZGVzY3JpcHRpb24iOiJHZXN0acOzbiBkZSBjb21idXN0aWJsZSB5IG1hbnRlbmltaWVudG9zIiwic3RhcnRfdXJsIjoiLiIsImRpc3BsYXkiOiJzdGFuZGFsb25lIiwiYmFja2dyb3VuZF9jb2xvciI6IiMxNmEzNGEiLCJ0aGVtZV9jb2xvciI6IiMxNmEzNGEiLCJpY29ucyI6W3sic3JjIjoiZGF0YTppbWFnZS9zdmcreG1sO2Jhc2U2NCxQSE4yWnlCNGJXeHVjejBpYUhSMGNEb3ZMM2QzZHk1M015NXZjbWN2TWpBd01DOXpkbWNpSUhaaWRXSmZRbTkwUFRwaU1EQWdNQ0ExTVRJZ05URXlJamw4Y21WamRDQjNhV1IwYUQwaU5URXlJaUJvWldWcFoyaDBQU0kxTVRJaUlISjRPVEl4TWlJZ1ptbHNiRDBpSXpFMllUTTBZU2N2UGp4bklIUnlZVzV6Wm05eWJUMGlikkhKalpXTnpkSFJoZEhWc2JpZ3dJRWxHUWlJZ1ptbHNiRDBpYm05dVpTSWdjM1J5YjJ0bFBTSjNhR2wwWlNJZ2MzUnliMnRsTFhkcFpIUm9QU0l5SWlCemRISnZhMlV0YkdsdVpXTmhjRDBpY205MWJtUWlJSE4wY205clpTMXNhVzVsYW05cFBTSnliM1Z1WkNJK1BIQmhZWEFnWkQwaVRURTVJRGxvTVdFeU1pQXdJREFnTVNBeUlESjJOaUkvUGp4d1lYUm9JR1E5SWtNeklERXdhRFZzTkMwMGFEZDJObWh0Tkd3dE1TQTBhQzBwYkRFdE5HdzRNUzAwekRFRU0wb3BMeTQ4YkdsdVpTQjRNUTBpTVRNaUlIazFQVEV5SWlCNk1qMGlNVElpSUhreVBURTBJaTgrUEhCaFlYQWdZRE0wTkRFekxqVWdReUF5TGpVZ01UVWdNaU4xTWpFNElEaDFJVEUzT1NBd0xWb2dOR0lnaUNBNUxqVWdNVGdnTlM0MUlERXFJREFnTFRJdU9TQXRMVFFnSWpJZ05TaXpJSEpwYkd3OUkzdG9hWFJsSWlCemRISnZhMlU5SW01dmJtVWlMeTQ4TDJjK1BDOXpkbWMrIiwic2l6ZXMiOiI1MTJ4NTEyIiwidHlwZSI6ImltYWdlL3N2Zyt4bWwiLCJwdXJwb3NlIjoiYW55IG1hc2thYmxlIn1dfQ==">
+
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -63,6 +76,15 @@
             </div>
 
             <div id="dashboard-stats" class="hidden space-y-4">
+
+                <!-- PWA Install Banner -->
+                <div id="install-banner" class="hidden bg-brand-600 text-white p-4 rounded-xl shadow-sm border border-brand-500 flex justify-between items-center mb-2">
+                    <div>
+                        <p class="font-bold text-sm">¡Instala la App!</p>
+                        <p class="text-[10px] text-brand-100 mt-0.5">Añádela a tu pantalla de inicio para usarla offline.</p>
+                    </div>
+                    <button onclick="installApp()" class="bg-white text-brand-600 font-bold px-3 py-1.5 rounded-lg text-sm shadow-sm active:scale-95 transition whitespace-nowrap">Instalar</button>
+                </div>
                 
                 <!-- Alertas de Mantenimiento -->
                 <div id="maintenance-alerts" class="hidden space-y-2">
@@ -389,8 +411,28 @@
         Mensaje
     </div>
 
-    <!-- Script de la App -->
+    <!-- Script de la App (PWA & IndexedDB) -->
     <script>
+        // PWA Install Prompt Logic
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            document.getElementById('install-banner').classList.remove('hidden');
+        });
+
+        const installApp = async () => {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                if (outcome === 'accepted') {
+                    console.log('User accepted the install prompt');
+                }
+                deferredPrompt = null;
+                document.getElementById('install-banner').classList.add('hidden');
+            }
+        };
+
         // Database Configuration - Versión 2 para soportar Mantenimientos
         const DB_NAME = 'CombustibleDB';
         const DB_VERSION = 2;
@@ -1086,20 +1128,39 @@
         });
 
         // -------------------------------------------------------------
-        // Service Worker setup for actual offline-first PWA behavior
+        // Service Worker y Caching Logic
         // -------------------------------------------------------------
         if ('serviceWorker' in navigator) {
             const swCode = `
-                const CACHE_NAME = 'combustible-app-v2';
+                const CACHE_NAME = 'combustible-app-v3';
+                
                 self.addEventListener('install', event => {
                     self.skipWaiting();
                 });
+
                 self.addEventListener('activate', event => {
-                    event.waitUntil(clients.claim());
+                    event.waitUntil(
+                        caches.keys().then(keys => {
+                            return Promise.all(
+                                keys.filter(key => key !== CACHE_NAME).map(key => caches.delete(key))
+                            );
+                        }).then(() => self.clients.claim())
+                    );
                 });
+
                 self.addEventListener('fetch', event => {
                     event.respondWith(
-                        fetch(event.request).catch(() => caches.match(event.request))
+                        fetch(event.request)
+                        .then(response => {
+                            if (event.request.method === 'GET' && event.request.url.startsWith('http')) {
+                                const resClone = response.clone();
+                                caches.open(CACHE_NAME).then(cache => {
+                                    cache.put(event.request, resClone);
+                                });
+                            }
+                            return response;
+                        })
+                        .catch(() => caches.match(event.request))
                     );
                 });
             `;
@@ -1107,10 +1168,9 @@
             const swUrl = URL.createObjectURL(blob);
             
             navigator.serviceWorker.register(swUrl)
-                .then(reg => console.log('Service Worker registrado'))
+                .then(reg => console.log('Service Worker PWA registrado exitosamente.'))
                 .catch(err => console.log('Service Worker falló', err));
         }
-
     </script>
 </body>
 </html>
