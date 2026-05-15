@@ -48,6 +48,15 @@
             -ms-overflow-style: none;
             scrollbar-width: none;
         }
+        
+        /* Custom scrollbar for license box */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background-color: #d1d5db;
+            border-radius: 4px;
+        }
     </style>
 </head>
 <body class="bg-gray-100 text-gray-800 font-sans h-screen flex flex-col overflow-hidden selection:bg-brand-500 selection:text-white">
@@ -368,6 +377,24 @@
                 <h3 class="text-red-800 font-bold mb-2">Zona de Peligro</h3>
                 <p class="text-xs text-red-600 mb-3">Esto borrará toda la base de datos de tu dispositivo.</p>
                 <button onclick="clearDatabase()" class="text-red-700 bg-white border border-red-200 text-sm font-bold py-2 px-4 rounded shadow-sm">Borrar todos los datos</button>
+            </div>
+            
+            <!-- Nueva Sección: Acerca de y Licencia -->
+            <div class="mt-6 bg-white rounded-xl shadow-sm border border-gray-100 p-5 text-center text-xs text-gray-500">
+                <h3 class="text-sm font-bold text-gray-800 mb-1">Acerca de Combustible APP</h3>
+                <p class="mb-2 text-[13px]">Mantenido por <a href="https://crgm.app" target="_blank" class="text-brand-600 font-bold hover:underline">crgm.app</a></p>
+                <a href="https://github.com/robindanilo2218/combustibleapp" target="_blank" class="inline-flex items-center justify-center gap-1.5 text-gray-700 bg-gray-100 px-3 py-2 rounded-lg hover:bg-gray-200 transition font-medium mt-1 mb-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                    Ver código en GitHub
+                </a>
+                
+                <div class="mt-2 pt-4 border-t border-gray-100 text-[10px] text-left text-gray-400 h-32 overflow-y-auto pr-2 custom-scrollbar">
+                    <p class="font-bold text-gray-500 mb-1">Licencia MIT</p>
+                    <p>Copyright (c) 2026 Robin Gregorio</p>
+                    <p class="mt-2">Se concede permiso, de forma gratuita, a cualquier persona que obtenga una copia de este software y de los archivos de documentación asociados (el "Software"), para utilizar el Software sin restricción, incluyendo sin limitación los derechos a usar, copiar, modificar, fusionar, publicar, distribuir, sublicenciar, y/o vender copias del Software, y a permitir a las personas a las que se les proporcione el Software a hacer lo mismo, sujeto a las siguientes condiciones:</p>
+                    <p class="mt-2">El aviso de copyright anterior y este aviso de permiso se incluirán en todas las copias o partes sustanciales del Software.</p>
+                    <p class="mt-2 font-bold uppercase text-[9px] leading-tight text-gray-500">El software se proporciona "tal cual", sin garantía de ningún tipo, expresa o implícita, incluyendo pero no limitado a garantías de comercialización, idoneidad para un propósito particular y no infracción. En ningún caso los autores o titulares del copyright serán responsables de ninguna reclamación, daños u otras responsabilidades, ya sea en una acción de contrato, agravio o cualquier otro motivo, que surja de o en conexión con el software o el uso u otro tipo de acciones en el software.</p>
+                </div>
             </div>
         </section>
 
