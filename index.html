@@ -46,7 +46,7 @@
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 22v-8c0-1.1.9-2 2-2h4c1.1 0 2 .9 2 2v8"/><path d="M11 22H3"/><path d="M15 4h-4a2 2 0 0 0-2 2v4"/><path d="M15 10h-4"/><path d="M21 16v-2.5a3.5 3.5 0 0 0-7 0V22h7v-6z"/><path d="M21 10.5V6a2 2 0 0 0-2-2h-2"/><path d="M17 12h4"/></svg>
             <h1 class="text-xl font-bold tracking-tight">Combustible APP</h1>
         </div>
-        <select id="active-vehicle-select" class="bg-brand-900 border border-brand-500 text-sm rounded px-2 py-1 outline-none hidden max-w-[120px] truncate">
+        <select id="active-vehicle-select" class="bg-brand-900 border border-brand-500 text-sm rounded px-2 py-1 outline-none hidden max-w-[50vw] sm:max-w-xs truncate">
             <!-- Options populated dynamically -->
         </select>
     </header>
@@ -76,12 +76,22 @@
 
                 <div class="grid grid-cols-2 gap-4">
                     <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
-                        <p class="text-xs text-gray-500 font-semibold uppercase tracking-wider">Gasto Total</p>
+                        <p class="text-[10px] text-gray-500 font-semibold uppercase tracking-wider">Gasto Total Histórico</p>
                         <p class="text-xl font-bold text-gray-800 mt-1" id="stat-total-cost">$0.00</p>
                     </div>
                     <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
-                        <p class="text-xs text-gray-500 font-semibold uppercase tracking-wider">Distancia Total</p>
-                        <p class="text-xl font-bold text-gray-800 mt-1" id="stat-total-dist">0 <span class="text-sm text-gray-500" id="stat-dist-unit">km</span></p>
+                        <p class="text-[10px] text-gray-500 font-semibold uppercase tracking-wider">Distancia Total</p>
+                        <p class="text-xl font-bold text-gray-800 mt-1"><span id="stat-total-dist-val">0</span> <span class="text-sm text-gray-500" id="stat-dist-unit">km</span></p>
+                    </div>
+                    
+                    <!-- Nuevas métricas: Costo por KM y Consumo por KM -->
+                    <div class="bg-brand-50 p-4 rounded-xl shadow-sm border border-brand-100">
+                        <p class="text-[10px] text-brand-700 font-semibold uppercase tracking-wider" id="stat-cost-dist-label">Costo por km</p>
+                        <p class="text-xl font-bold text-brand-900 mt-1" id="stat-cost-per-dist">--</p>
+                    </div>
+                    <div class="bg-brand-50 p-4 rounded-xl shadow-sm border border-brand-100">
+                        <p class="text-[10px] text-brand-700 font-semibold uppercase tracking-wider" id="stat-vol-dist-label">Consumo por km</p>
+                        <p class="text-xl font-bold text-brand-900 mt-1" id="stat-vol-per-dist">--</p>
                     </div>
                 </div>
 
@@ -96,7 +106,13 @@
         <section id="view-add" class="p-4 hidden">
             <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
                 <h2 class="text-xl font-bold text-gray-800 mb-4 flex items-center gap-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-brand-500"><circle cx="12" cy="12" r="10"/><path d="M12 8v8"/><path d="M8 12h8"/></svg>
+                    <!-- ÍCONO: Pistola de combustible con gota -->
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-brand-500">
+                        <path d="M19 9h1a2 2 0 0 1 2 2v6" />
+                        <path d="M3 10h5l4-4h7v6h-4l-1 4h-4l1-4l-3-1H3z" />
+                        <line x1="13" y1="12" x2="12" y2="14" />
+                        <path d="M4 13.5 C 2.5 15 2.5 17 4 17 C 5.5 17 5.5 15 4 13.5 Z" fill="currentColor" stroke="none" />
+                    </svg>
                     Nueva Carga
                 </h2>
                 <form id="form-fillup" class="space-y-4">
@@ -110,12 +126,12 @@
                     </div>
                     <div class="grid grid-cols-2 gap-4">
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Cantidad (<span class="unit-vol">L</span>)</label>
-                            <input type="number" step="0.01" id="fillup-vol" required placeholder="Ej. 40" class="w-full border border-gray-300 rounded-lg p-3 outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Cantidad (<span class="unit-vol">gal</span>)</label>
+                            <input type="number" step="0.01" id="fillup-vol" required placeholder="Ej. 10" class="w-full border border-gray-300 rounded-lg p-3 outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition">
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Costo Total ($)</label>
-                            <input type="number" step="0.01" id="fillup-cost" required placeholder="Ej. 800" class="w-full border border-gray-300 rounded-lg p-3 outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition">
+                            <input type="number" step="0.01" id="fillup-cost" required placeholder="Ej. 40" class="w-full border border-gray-300 rounded-lg p-3 outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition">
                         </div>
                     </div>
                     <div>
@@ -158,6 +174,12 @@
                         <label class="block text-sm font-medium text-gray-700 mb-1">Nombre / Apodo</label>
                         <input type="text" id="veh-name" required placeholder="Ej. Mi Auto, Camioneta Trabajo" class="w-full border border-gray-300 rounded-lg p-3 outline-none focus:border-brand-500 transition">
                     </div>
+                    <!-- NUEVO CAMPO: Número de Placa -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Número de Placa (Opcional)</label>
+                        <input type="text" id="veh-plate" placeholder="Ej. P356GHC" class="w-full border border-gray-300 rounded-lg p-3 outline-none focus:border-brand-500 transition uppercase">
+                        <p class="text-xs text-gray-500 mt-1">Sirve para sincronizar datos entre móviles sin duplicarlos.</p>
+                    </div>
                     <div class="grid grid-cols-2 gap-4">
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Unidad de Distancia</label>
@@ -169,8 +191,8 @@
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Unidad de Volumen</label>
                             <select id="veh-vol" class="w-full border border-gray-300 rounded-lg p-3 outline-none focus:border-brand-500 bg-white">
-                                <option value="L">Litros (L)</option>
                                 <option value="gal">Galones (gal)</option>
+                                <option value="L">Litros (L)</option>
                             </select>
                         </div>
                     </div>
@@ -210,7 +232,7 @@
                     <label class="w-full bg-gray-800 hover:bg-gray-900 text-white font-bold py-4 rounded-xl shadow-md flex justify-center items-center gap-3 transition active:scale-[0.98] cursor-pointer">
                         <!-- Icono Carpeta -->
                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"/></svg>
-                        Abrir Archivo (.gas)
+                        Abrir y Sincronizar (.gas)
                         <input type="file" id="import-file" accept=".gas" class="hidden" onchange="importData(event)">
                     </label>
                 </div>
@@ -233,7 +255,15 @@
                 <span class="text-[10px] font-medium">Resumen</span>
             </button>
             <button onclick="switchTab('add')" id="tab-add" class="nav-btn flex-1 py-3 flex flex-col items-center gap-1 text-gray-400 hover:text-brand-600 transition">
-                <div class="bg-brand-50 rounded-full p-1"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg></div>
+                <!-- ÍCONO: Pistola de combustible con gota (Navegación) -->
+                <div class="bg-brand-50 rounded-full p-1">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M19 9h1a2 2 0 0 1 2 2v6" />
+                        <path d="M3 10h5l4-4h7v6h-4l-1 4h-4l1-4l-3-1H3z" />
+                        <line x1="13" y1="12" x2="12" y2="14" />
+                        <path d="M4 13.5 C 2.5 15 2.5 17 4 17 C 5.5 17 5.5 15 4 13.5 Z" fill="currentColor" stroke="none" />
+                    </svg>
+                </div>
                 <span class="text-[10px] font-medium text-brand-600">Cargar</span>
             </button>
             <button onclick="switchTab('vehicles')" id="tab-vehicles" class="nav-btn flex-1 py-3 flex flex-col items-center gap-1 text-gray-400 hover:text-brand-600 transition">
@@ -408,7 +438,7 @@
 
             } catch (error) {
                 console.error("Initialization failed:", error);
-                showToast("Error al cargar base de datos");
+                showToast("Error al inicializar");
             }
         };
 
@@ -435,6 +465,8 @@
             document.querySelectorAll('.unit-vol').forEach(el => el.textContent = vehicle.volUnit);
             document.getElementById('stat-dist-unit').textContent = vehicle.distUnit;
             document.getElementById('stat-efficiency-unit').textContent = `${vehicle.distUnit}/${vehicle.volUnit}`;
+            document.getElementById('stat-cost-dist-label').textContent = `Costo por ${vehicle.distUnit}`;
+            document.getElementById('stat-vol-dist-label').textContent = `Consumo por ${vehicle.distUnit}`;
         };
 
         // Form Handlers
@@ -443,6 +475,7 @@
             const newVehicle = {
                 id: Date.now().toString(),
                 name: document.getElementById('veh-name').value,
+                plate: document.getElementById('veh-plate').value.trim().toUpperCase(),
                 distUnit: document.getElementById('veh-dist').value,
                 volUnit: document.getElementById('veh-vol').value,
                 timestamp: Date.now()
@@ -502,7 +535,7 @@
         });
 
         const deleteVehicle = async (id) => {
-            if(confirm("¿Seguro que deseas eliminar este vehículo y todo su historial de combustible?")) {
+            if(confirm("¿Seguro que deseas eliminar este vehículo y todo su historial?")) {
                 // Delete vehicle
                 await deleteFromStore('vehicles', id);
                 // Delete associated fillups
@@ -535,7 +568,10 @@
                     <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex justify-between items-center">
                         <div>
                             <h3 class="font-bold text-gray-800">${v.name}</h3>
-                            <p class="text-xs text-gray-500">Unidades: ${v.distUnit} / ${v.volUnit}</p>
+                            <p class="text-xs text-gray-500 mt-1">
+                                ${v.plate ? `<span class="bg-gray-100 text-gray-700 px-1.5 py-0.5 rounded mr-1 font-mono border border-gray-200">${v.plate}</span>` : ''}
+                                ${v.distUnit} / ${v.volUnit}
+                            </p>
                         </div>
                         <button onclick="deleteVehicle('${v.id}')" class="p-2 text-red-500 hover:bg-red-50 rounded-full transition">
                             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg>
@@ -553,6 +589,7 @@
             list.innerHTML = '';
 
             let totalCost = 0;
+            let totalCostForEfficiency = 0;
             let totalDist = 0;
             let totalVolForEfficiency = 0;
             let validSegments = 0;
@@ -565,47 +602,60 @@
                 list.innerHTML = `<p class="text-sm text-gray-500 text-center py-4">No hay cargas registradas para este vehículo.</p>`;
                 document.getElementById('stat-avg-efficiency').textContent = '--';
                 document.getElementById('stat-total-cost').textContent = '$0.00';
-                document.getElementById('stat-total-dist').textContent = '0';
+                document.getElementById('stat-total-dist-val').textContent = '0';
+                document.getElementById('stat-cost-per-dist').textContent = '--';
+                document.getElementById('stat-vol-per-dist').textContent = '--';
                 return;
             }
 
             // Calculations
             totalCost = calcArr.reduce((sum, f) => sum + f.cost, 0);
+            
             if (calcArr.length > 1) {
                 totalDist = calcArr[calcArr.length - 1].odo - calcArr[0].odo;
                 
-                // Calculate efficiency (ignore volume of the very first fillup as it got us started)
+                // Calculate efficiency (ignore volume & cost of the very first fillup as it got us started before tracking distance)
                 for (let i = 1; i < calcArr.length; i++) {
                     totalVolForEfficiency += calcArr[i].vol;
+                    totalCostForEfficiency += calcArr[i].cost;
                     validSegments++;
                 }
             }
 
             const avgEff = validSegments > 0 ? (totalDist / totalVolForEfficiency).toFixed(2) : '--';
+            const avgCostPerDist = validSegments > 0 ? (totalCostForEfficiency / totalDist).toFixed(2) : '--';
+            const avgVolPerDist = validSegments > 0 ? (totalVolForEfficiency / totalDist).toFixed(3) : '--';
 
             document.getElementById('stat-avg-efficiency').textContent = avgEff;
             document.getElementById('stat-total-cost').textContent = `$${totalCost.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
-            document.getElementById('stat-total-dist').textContent = totalDist.toLocaleString();
+            document.getElementById('stat-total-dist-val').textContent = totalDist.toLocaleString();
+            document.getElementById('stat-cost-per-dist').textContent = avgCostPerDist !== '--' ? `$${avgCostPerDist}` : '--';
+            document.getElementById('stat-vol-per-dist').textContent = avgVolPerDist !== '--' ? `${avgVolPerDist}` : '--';
 
             // Render list items with segment stats
             fillupsCache.forEach((f, index) => {
                 let segmentDist = '--';
                 let segmentEff = '--';
+                let costPerDistSeg = '--';
+                let volPerDistSeg = '--';
                 
                 // Find previous fillup chronologically (which is next in our descending array)
                 const prev = fillupsCache[index + 1];
                 if (prev) {
                     segmentDist = (f.odo - prev.odo).toFixed(1);
-                    if (f.vol > 0) {
+                    if (f.vol > 0 && segmentDist > 0) {
                         segmentEff = (segmentDist / f.vol).toFixed(2);
+                        costPerDistSeg = (f.cost / segmentDist).toFixed(2);
+                        volPerDistSeg = (f.vol / segmentDist).toFixed(3);
                     }
                 }
 
                 // Color codes for route type
                 let badgeColor = "bg-gray-100 text-gray-700";
-                if(f.route === 'Ciudad') badgeColor = "bg-blue-100 text-blue-800";
-                if(f.route === 'Carretera') badgeColor = "bg-green-100 text-green-800";
-                if(f.route === 'Mixta') badgeColor = "bg-purple-100 text-purple-800";
+                let routeDisplay = f.route;
+                if(f.route === 'Ciudad') { badgeColor = "bg-blue-100 text-blue-800"; routeDisplay = "Ciudad"; }
+                if(f.route === 'Carretera') { badgeColor = "bg-green-100 text-green-800"; routeDisplay = "Carretera"; }
+                if(f.route === 'Mixta') { badgeColor = "bg-purple-100 text-purple-800"; routeDisplay = "Mixta"; }
 
                 list.innerHTML += `
                     <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 relative overflow-hidden">
@@ -622,24 +672,32 @@
                                     Odo: ${f.odo.toLocaleString()} ${vehicle.distUnit}
                                 </p>
                             </div>
-                            <span class="text-[10px] font-bold px-2 py-1 rounded-full ${badgeColor}">${f.route}</span>
+                            <span class="text-[10px] font-bold px-2 py-1 rounded-full ${badgeColor}">${routeDisplay}</span>
                         </div>
-                        <div class="grid grid-cols-4 gap-2 mt-3 pt-3 border-t border-gray-50 text-center">
+                        <div class="grid grid-cols-3 gap-y-3 gap-x-2 mt-3 pt-3 border-t border-gray-50 text-center">
                             <div>
-                                <p class="text-[10px] text-gray-400 uppercase">Añadido</p>
-                                <p class="text-sm font-bold text-gray-700">${f.vol} ${vehicle.volUnit}</p>
+                                <p class="text-[9px] text-gray-400 uppercase">Añadido</p>
+                                <p class="text-sm font-bold text-gray-700">${f.vol} <span class="text-[9px] font-normal">${vehicle.volUnit}</span></p>
                             </div>
                             <div>
-                                <p class="text-[10px] text-gray-400 uppercase">Costo</p>
+                                <p class="text-[9px] text-gray-400 uppercase">Costo</p>
                                 <p class="text-sm font-bold text-gray-700">$${f.cost}</p>
                             </div>
                             <div>
-                                <p class="text-[10px] text-gray-400 uppercase">Recorrido</p>
-                                <p class="text-sm font-bold text-brand-600">${segmentDist}</p>
+                                <p class="text-[9px] text-gray-400 uppercase">Recorrido</p>
+                                <p class="text-sm font-bold text-brand-600">${segmentDist} <span class="text-[9px] font-normal">${vehicle.distUnit}</span></p>
                             </div>
                             <div>
-                                <p class="text-[10px] text-gray-400 uppercase">Rend.</p>
+                                <p class="text-[9px] text-gray-400 uppercase" title="Rendimiento">Rend.</p>
                                 <p class="text-sm font-bold text-brand-600">${segmentEff}</p>
+                            </div>
+                            <div>
+                                <p class="text-[9px] text-gray-400 uppercase" title="Costo por distancia">Costo/${vehicle.distUnit}</p>
+                                <p class="text-sm font-bold text-brand-600">${costPerDistSeg !== '--' ? '$' + costPerDistSeg : '--'}</p>
+                            </div>
+                            <div>
+                                <p class="text-[9px] text-gray-400 uppercase" title="Consumo por distancia">${vehicle.volUnit}/${vehicle.distUnit}</p>
+                                <p class="text-sm font-bold text-brand-600">${volPerDistSeg}</p>
                             </div>
                         </div>
                     </div>
@@ -647,7 +705,7 @@
             });
         };
 
-        // Export & Import Logic (.gas file)
+        // Export & Import Logic (.gas file) con Sincronización Inteligente
         const exportData = async () => {
             try {
                 const vehicles = await getAllFromStore('vehicles');
@@ -655,7 +713,7 @@
                 
                 const data = {
                     appName: "CombustibleAPP",
-                    version: "1.0",
+                    version: "1.1", // Subimos la versión para control
                     exportDate: new Date().toISOString(),
                     vehicles: vehicles,
                     fillups: fillups
@@ -696,19 +754,56 @@
                         throw new Error("Archivo .gas inválido");
                     }
 
-                    // Clear existing DB
-                    await clearStore('fillups');
-                    await clearStore('vehicles');
+                    const existingVehicles = await getAllFromStore('vehicles');
+                    const existingFillups = await getAllFromStore('fillups');
+                    
+                    // Mapa para relacionar IDs importados con IDs locales (si coinciden por placa)
+                    const vehicleIdMap = {};
 
-                    // Import new data
-                    for (const v of data.vehicles) {
-                        await putToStore('vehicles', v);
-                    }
-                    for (const f of data.fillups) {
-                        await putToStore('fillups', f);
+                    // 1. Procesar Vehículos
+                    for (const impV of data.vehicles) {
+                        let matchedV = null;
+                        // Si el vehículo importado tiene placa, buscamos si ya existe uno con esa misma placa
+                        if (impV.plate) {
+                            matchedV = existingVehicles.find(ev => ev.plate === impV.plate);
+                        }
+                        
+                        if (matchedV) {
+                            // Actualizar vehículo existente pero mantener el ID local
+                            vehicleIdMap[impV.id] = matchedV.id;
+                            matchedV.name = impV.name;
+                            matchedV.distUnit = impV.distUnit;
+                            matchedV.volUnit = impV.volUnit;
+                            // Se asume que la placa es la misma
+                            await putToStore('vehicles', matchedV);
+                        } else {
+                            // Si no hay placa o no coincide, es un vehículo nuevo
+                            vehicleIdMap[impV.id] = impV.id;
+                            await putToStore('vehicles', impV);
+                        }
                     }
 
-                    showToast("Datos importados con éxito");
+                    // 2. Procesar Cargas de Combustible
+                    for (const impF of data.fillups) {
+                        // Reasignar al ID del vehículo correcto según nuestro mapa
+                        if (vehicleIdMap[impF.vehicleId]) {
+                            impF.vehicleId = vehicleIdMap[impF.vehicleId];
+                        }
+
+                        // Verificar si ya existe esta misma carga (mismo vehículo y mismo odómetro)
+                        const isDuplicate = existingFillups.find(ef => 
+                            ef.vehicleId === impF.vehicleId && ef.odo === impF.odo && ef.id !== impF.id
+                        );
+
+                        if (isDuplicate) {
+                            // Actualizar el registro existente usando el ID que ya tenemos localmente
+                            impF.id = isDuplicate.id;
+                        }
+                        
+                        await putToStore('fillups', impF);
+                    }
+
+                    showToast("Datos combinados y sincronizados");
                     event.target.value = ''; // reset file input
                     activeVehicleId = null; // reset selection
                     await loadInitialData(); // reload UI
@@ -767,7 +862,7 @@
             
             navigator.serviceWorker.register(swUrl)
                 .then(reg => console.log('Service Worker registrado (Offline mode enabled)'))
-                .catch(err => console.log('Service Worker falló (Normall in previews)', err));
+                .catch(err => console.log('Service Worker falló (Normal in previews)', err));
         }
 
     </script>
